@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="app_in_name">GET PET HELP</string>
+    <string name="app_name_after">Register App</string>
+    <string name="text_bottom">Войдите в свою учетную запись</string>
+    <string name="button">Войти</string>
+    <string name="button2">Зарегистрироваться</string>
+</resources>
