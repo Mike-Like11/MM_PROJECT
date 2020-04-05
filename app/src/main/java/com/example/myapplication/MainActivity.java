@@ -38,8 +38,9 @@ RelativeLayout root;
         sign=findViewById(R.id.button2);
         register=findViewById(R.id.button);
         auth=FirebaseAuth.getInstance();
-        db=FirebaseDatabase.getInstance();
+                db=FirebaseDatabase.getInstance();
         users=db.getReference();
+
         root=findViewById(R.id.root_element);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +151,7 @@ private void showRegisterWindow(){
                             user.setName(name.getText().toString());
                             user.setPhone(phone.getText().toString());
                             user.setPass(pass.getText().toString());
-                            users.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user)
+                            users.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
