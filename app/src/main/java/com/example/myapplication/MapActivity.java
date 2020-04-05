@@ -34,7 +34,7 @@ public class MapActivity extends AppCompatActivity {
         dialog.setMessage("Введите все  данные о вашем задании ");
         LayoutInflater inflater=LayoutInflater.from(this);
         View register_window=inflater.inflate(R.layout.request_window,null);
-        dialog.setView(register_window);   
+        dialog.setView(register_window);
 
 
         dialog.show();

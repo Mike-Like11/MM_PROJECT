@@ -73,13 +73,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/dataButton"
+            <ImageView
+
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/date"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
-                android:onClick="setDate"  />
+                 />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_marginLeft="10dp"
