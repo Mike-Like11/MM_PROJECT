@@ -64,7 +64,7 @@ public class MapActivity extends AppCompatActivity {
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
 
        dialog.setTitle("Ваша Просьба");
-        dialog.setMessage("Введите все  данные о вашем задании ");
+        dialog.setMessage("Введите все данные о вашем задании ");
         LayoutInflater inflater=LayoutInflater.from(this);
         View request_window=inflater.inflate(R.layout.request_window,null);
         dialog.setView(request_window);
@@ -103,7 +103,7 @@ public class MapActivity extends AppCompatActivity {
                         services.child("Requests").setValue(r).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Snackbar.make(root,"Просьба   добавлена!",Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(root,"Просьба добавлена!",Snackbar.LENGTH_SHORT).show();
                                 startActivity(new Intent(MapActivity.this, MaiwActivity.class));
                                 finish();
 
