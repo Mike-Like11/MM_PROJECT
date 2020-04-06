@@ -13,7 +13,7 @@ public class User {
         this.email = nunber;
     }
 
-    public String getName() {
+    public String getDisplayName() {
         return name;
     }
 

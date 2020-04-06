@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -146,16 +148,20 @@ private void showRegisterWindow(){
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            User user=new User();
-                            user.setEmail(name.getText().toString());
-                            user.setName(name.getText().toString());
-                            user.setPhone(phone.getText().toString());
-                            user.setPass(pass.getText().toString());
-                            users.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user)
+                            User user1=new User();
+                            user1.setEmail(email.getText().toString());
+                            user1.setName(name.getText().toString());
+                            user1.setPhone(phone.getText().toString());
+                            user1.setPass(pass.getText().toString());
+                            users.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user1)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Snackbar.make(root,"Пользователь добавлен!",Snackbar.LENGTH_SHORT).show();
+                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                            UserProfileChangeRequest profileUpdates =new UserProfileChangeRequest.Builder().setDisplayName(name.getText().toString()).build();
+                                            user.updateProfile(profileUpdates);
+                                            Snackbar.make(root,"Пользователь "+profileUpdates.getDisplayName()+" добавлен!",Snackbar.LENGTH_SHORT).show();
                                         }
                                     });
 

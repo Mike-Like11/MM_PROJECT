@@ -2,7 +2,9 @@ package com.example.myapplication.Models;
 
 public class Request {
     private String name_1, name_2,task , description,address,data;
+    public Request(){
 
+    }
     public Request(String name_1, String name_2, String task, String description,String address, String data) {
         this.name_1 = name_1;
         this.name_2 = name_2;
