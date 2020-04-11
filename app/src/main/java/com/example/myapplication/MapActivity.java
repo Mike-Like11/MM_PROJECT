@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.myapplication.Models.Request;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +55,7 @@ public class MapActivity extends AppCompatActivity {
         String name = user.getDisplayName();
         String email = user.getEmail();
         tw=findViewById(R.id.text_up);
-        tw.setText("Добро пожаловать, "+name);
+        tw.setText("Ваши просьбы");
         request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,11 +106,19 @@ public class MapActivity extends AppCompatActivity {
                         services.child("Requests").setValue(r).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Snackbar.make(root,"Просьба добавлена!",Snackbar.LENGTH_SHORT).show();
+
+                                //Snackbar.make(root,"Просьба добавлена!",Snackbar.LENGTH_SHORT).show();
                                 startActivity(new Intent(MapActivity.this, MaiwActivity.class));
                                 finish();
 
                             }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Snackbar.make(root, "Ошибка авторизации" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                            }
+
+                            ;
                         });
 
 

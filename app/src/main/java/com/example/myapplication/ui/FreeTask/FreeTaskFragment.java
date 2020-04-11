@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.home;
+package com.example.myapplication.ui.FreeTask;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,7 +23,7 @@ public class FreeTaskFragment extends Fragment {
         freeTaskModel =
                 ViewModelProviders.of(this).get(FreeTaskModel.class);
         View root = inflater.inflate(R.layout.fragment_free_tasks, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
+        final TextView textView = root.findViewById(R.id.text_free_tasks);
         freeTaskModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {

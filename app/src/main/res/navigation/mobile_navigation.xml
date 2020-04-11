@@ -7,27 +7,27 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.myapplication.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:name="com.example.myapplication.ui.FreeTask.FreeTaskFragment"
+        android:label="@string/menu_free_task"
+        tools:layout="@layout/fragment_free_tasks" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.myapplication.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:name="com.example.myapplication.ui.MyTask.GalleryFragment"
+        android:label="@string/menu_my_task"
+        tools:layout="@layout/fragment_my_task" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.example.myapplication.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:name="com.example.myapplication.ui.MyWork.MyWorkFragment"
+        android:label="@string/menu_my_work"
+        tools:layout="@layout/fragment_my_work" />
 
     <fragment
         android:id="@+id/nav_tools"
-        android:name="com.example.myapplication.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        android:name="com.example.myapplication.ui.Articles.ArticlesFragment"
+        android:label="@string/menu_articles"
+        tools:layout="@layout/fragment_articles" />
 
     <fragment
         android:id="@+id/nav_share"
@@ -39,5 +39,5 @@
         android:id="@+id/nav_send"
         android:name="com.example.myapplication.ui.send.SendFragment"
         android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+        tools:layout="@layout/fragment_my_work" />
 </navigation>

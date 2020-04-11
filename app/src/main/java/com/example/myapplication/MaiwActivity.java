@@ -13,6 +13,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -20,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.TextView;
 
 public class MaiwActivity extends AppCompatActivity {
 
@@ -31,7 +34,12 @@ public class MaiwActivity extends AppCompatActivity {
         setContentView(R.layout.activity_maiw2);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // Name, email address, and profile photo Url
+        String name = user.getDisplayName();
+        String email = user.getEmail();
+
+        /*FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,10 +47,14 @@ public class MaiwActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        */
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+        Menu home=findViewById(R.id.nav_home);
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
                 R.id.nav_tools, R.id.nav_share, R.id.nav_send)
@@ -51,6 +63,14 @@ public class MaiwActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        View hView =  navigationView.inflateHeaderView(R.layout.nav_header_maiw);
+
+        TextView teu = (TextView)hView.findViewById(R.id.textView_email_user);
+        teu.setText(email);
+        TextView tnu = (TextView)hView.findViewById(R.id.textView_name_user);
+        tnu.setText(name);
+
     }
 
     @Override

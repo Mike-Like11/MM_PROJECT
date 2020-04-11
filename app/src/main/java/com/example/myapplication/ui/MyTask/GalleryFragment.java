@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.gallery;
+package com.example.myapplication.ui.MyTask;
 
 import android.content.Intent;
 import android.os.Bundle;

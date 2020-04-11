@@ -90,7 +90,7 @@ private void showSignWindow(){
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            startActivity(new Intent(MainActivity.this, MapActivity.class));
+                            startActivity(new Intent(MainActivity.this, MaiwActivity.class));
                             finish();
 
                             }
