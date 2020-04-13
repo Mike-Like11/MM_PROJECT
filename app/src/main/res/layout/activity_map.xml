@@ -18,7 +18,6 @@
         android:orientation="vertical">
 
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
@@ -26,7 +25,6 @@
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="35sp" />
-
         <TextView
             android:id="@+id/text_up"
             android:layout_width="wrap_content"

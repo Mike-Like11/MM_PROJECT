@@ -15,13 +15,11 @@ import com.example.myapplication.R;
 
 public class GalleryFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
         View root = inflater.inflate(R.layout.fragment_my_task, container, false);
         Intent intent=new Intent(getContext(),MapActivity.class);
         startActivity(intent);

@@ -125,13 +125,6 @@ public class MapActivity extends AppCompatActivity {
                     }
 
               });
-
-
-
-
-
-
-
         dialog.show();
     }
 
