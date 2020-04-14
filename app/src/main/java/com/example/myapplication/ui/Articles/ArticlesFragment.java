@@ -20,6 +20,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.MaiwActivity;
 import com.example.myapplication.MapActivity;
@@ -39,6 +41,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +55,9 @@ public class ArticlesFragment extends Fragment {
     DatabaseReference services;
     private List<Article> ItemList;
     TextView txt;
+    private List<Article>listData;
+    private RecyclerView rv;
+    private ArticleAdapter adapter;
 
 
 
@@ -61,10 +67,15 @@ public class ArticlesFragment extends Fragment {
         services=db.getReference();
         mContext=getActivity();
 
+
         articlesModel =
                 ViewModelProviders.of(this).get(ArticlesModel.class);
         final View root = inflater.inflate(R.layout.fragment_articles, container, false);
         fb=(FloatingActionButton) root.findViewById(R.id.fab);
+        rv=(RecyclerView)root.findViewById(R.id.recyclerview);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(mContext));
+        listData=new ArrayList<>();
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,11 +86,22 @@ public class ArticlesFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                /*
 
                 txt = (TextView) root.findViewById(R.id.text_bottom);
                 txt.setText(null);
                 for (DataSnapshot country : dataSnapshot.child("Articles").getChildren()) {
                     txt.append(country.getKey() + " " + (country.child("name_narrator").getValue()) + " " + (country.child("description").getValue()) + "\n");
+
+                }
+                */
+                if (dataSnapshot.exists()){
+                    for (DataSnapshot npsnapshot : dataSnapshot.child("Articles").getChildren()){
+                        Article l=npsnapshot.getValue(Article.class);
+                        listData.add(l);
+                    }
+                    adapter=new ArticleAdapter(listData);
+                    rv.setAdapter(adapter);
 
                 }
 
