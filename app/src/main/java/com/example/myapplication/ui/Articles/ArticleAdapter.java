@@ -70,7 +70,7 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
     holder.myTV.setEnabled(false);
     db= FirebaseDatabase.getInstance();
     services=db.getReference();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     // Name, email address, and profile photo Url
     final String name = user.getDisplayName();
     final String email = user.getEmail();
@@ -129,6 +129,85 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
             holder.lb.setLiked(false);
         }
     });
+
+    holder.btn_c.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final AlertDialog.Builder alertbox=new  AlertDialog.Builder(v.getRootView().getContext());
+            AlertDialog alert = alertbox.create();
+
+            LayoutInflater inflater=LayoutInflater.from(v.getRootView().getContext());
+            View comment_window=inflater.inflate(R.layout.comment_window,null);
+            alertbox.setView(comment_window);
+            
+            alertbox.setTitle("Комментарии");
+            final MaterialEditText yc=comment_window.findViewById(R.id.your_Commnebt_Field);
+
+            final TextView tvc=comment_window.findViewById(R.id.comments);
+
+            tvc.setText("здесь ничего нет");
+              services.child("Articles").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
+                  @Override
+                  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                      tvc.setText("");
+                      String s = "";
+                      for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                          tvc.append(ds.getValue().toString());
+                          tvc.append(System.getProperty("line.separator"));
+
+                      }
+                  }
+                  @Override
+                  public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                  }
+              });
+
+            final AppCompatButton acbc=comment_window.findViewById(R.id.btn_cooment_next);
+            acbc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    services.child("Articles").child(ld.getName()).child("Comment").push().setValue(name+':'+yc.getText().toString());
+                    yc.setText("");
+                    services.child("Articles").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            tvc.setText("");
+                            String s = "";
+                            for(DataSnapshot ds:dataSnapshot.getChildren()){
+                                tvc.append(ds.getValue().toString());
+                                tvc.append(System.getProperty("line.separator"));
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            });
+
+
+            alertbox.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface dialog, int arg1) {
+                   dialog.dismiss();
+                }
+            });
+
+
+
+
+            alertbox.show();
+        }
+
+
+
+
+              });
 
 
         if(ld.user_s(ld.getName_narrator(),name)){
@@ -189,7 +268,7 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
             });
             holder.btn_d.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(android.view.View v) {
+                public void onClick(View v) {
                     services.child("Articles").child(ld.getName()).removeValue();
                     ld.setName("");
                     ld.setDescription("");
@@ -227,7 +306,7 @@ public int getItemCount() {
 public class ViewHolder extends RecyclerView.ViewHolder{
     private TextView txtavtor,txtname,txtmovie,nl;
     private EditText myTV;
-    private AppCompatButton btn_d,btn_r;
+    private AppCompatButton btn_d,btn_r,btn_c;
     private   ViewSwitcher switcher;
     private LikeButton lb;
     public ViewHolder(View itemView) {
@@ -236,6 +315,7 @@ public class ViewHolder extends RecyclerView.ViewHolder{
         txtmovie=(TextView)itemView.findViewById(R.id.avtortxt);
         btn_d=(AppCompatButton)itemView.findViewById(R.id.btn_a_d);
         btn_r=(AppCompatButton) itemView.findViewById(R.id.btn_a_r);
+        btn_c=(AppCompatButton) itemView.findViewById(R.id.btn_cooment);
         myTV = (EditText) itemView.findViewById(R.id.avtor_2txt);
         lb=(LikeButton)itemView.findViewById(R.id.star_button);
         nl=(TextView)itemView.findViewById(R.id.number_liketxt);

@@ -100,6 +100,14 @@
                 android:textColor="?android:attr/textColorLink"
                 android:text="Отредактировать"
                 />
+            <androidx.appcompat.widget.AppCompatButton
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:id="@+id/btn_cooment"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorLink"
+                android:text="Комменты"
+                />
 
 
         </LinearLayout>
