@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.MaiwActivity;
 import com.example.myapplication.MapActivity;
 import com.example.myapplication.Models.Article;
+import com.example.myapplication.Models.Like;
 import com.example.myapplication.Models.Request;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,12 +39,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class ArticlesFragment extends Fragment {
@@ -76,6 +81,10 @@ public class ArticlesFragment extends Fragment {
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(mContext));
         listData=new ArrayList<>();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // Name, email address, and profile photo Url
+         final String name = user.getDisplayName();
+        final String email = user.getEmail();
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,11 +105,30 @@ public class ArticlesFragment extends Fragment {
                 }
                 */
                 if (dataSnapshot.exists()){
+                    listData.clear();
+                  //GenericTypeIndicator<ArrayList<Article>>t=new GenericTypeIndicator<ArrayList<Article>>(){};
+                    //listData=dataSnapshot.child("Articles").getValue(t);
                     for (DataSnapshot npsnapshot : dataSnapshot.child("Articles").getChildren()){
-                        Article l=npsnapshot.getValue(Article.class);
-                        listData.add(l);
+                        Article l=npsnapshot.child("Article").getValue(Article.class);
+                        boolean liki=false;
+                        for(DataSnapshot ds:npsnapshot.child("Likes").getChildren()) {
+                           String like = (String) ds.getValue();
+                            if (Objects.equals(like, email)) {
+                                ds.getRef().removeValue();
+                              l.setLike_or_not(true);
+                                break;
+                            }
+                        }
+
+                        assert l != null;
+                        if(!l.getName().equals("") &&!l.getDescription().equals("")) {
+                            listData.add(l);
+                        }
+
                     }
-                    adapter=new ArticleAdapter(listData);
+
+
+                    adapter=new ArticleAdapter(listData,mContext);
                     rv.setAdapter(adapter);
 
                 }
@@ -145,9 +173,15 @@ public class ArticlesFragment extends Fragment {
                 a.setName_narrator(name);
                 a.setName(name_a.getText().toString());
                 a.setDescription(description.getText().toString());
-                services.child("Articles").child(name_a.getText().toString()).setValue(a).addOnSuccessListener(new OnSuccessListener<Void>() {
+                a.setLike(0);
+                final Like l=new Like();
+                l.setAmail("aaaa");
+                a.setLike_or_not(false);
+
+                services.child("Articles").child(name_a.getText().toString()).child("Article").setValue(a).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        services.child("Articles").child(name_a.getText().toString()).child("Likes").setValue(l);
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {

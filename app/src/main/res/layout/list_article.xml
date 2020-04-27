@@ -1,31 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp">
 
-   <!-- <LinearLayout
-    android:layout_width="match_parent"
-    android:gravity="center"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
-
-   <TextView
-    android:textColor="@color/colorPrimary"
-    android:textSize="30dp"
-
-    android:id="@+id/nametxt"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
-    <TextView
-    android:textColor="@color/colorPrimary"
-    android:textSize="30dp"
-
-    android:id="@+id/movietxt"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
-    </LinearLayout>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,27 +14,95 @@
         android:padding="16dp">
 
         <!-- Title, secondary and supporting text -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/nametxt"
-
+            android:layout_weight="6"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="30sp"
             />
+        <com.like.LikeButton
+            android:id="@+id/star_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            app:icon_size="10dp"
+            app:icon_type="heart"
+
+            android:layout_weight="1"
+            />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:id="@+id/avtortxt"
+            android:layout_weight="6"
             android:textColor="?android:attr/textColorSecondary"
             />
         <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+            android:layout_weight="1"
+        android:id="@+id/number_liketxt"
+            android:layout_marginRight="8dp"
+        android:textColor="?android:attr/textColorSecondary"
+        />
+        </LinearLayout>
+
+
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:id="@+id/avtor_2txt"
+                android:textColor="@android:color/black"
+                android:background="@null"
+                android:textSize="20sp"
+
+                />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:id="@+id/suttxt"
-            android:textColor="?android:attr/textColorSecondary"
-            />
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Удалить"
+                android:id="@+id/btn_a_d"
+                android:textColor="?android:attr/textColorHighlightInverse"
+                style="?attr/borderlessButtonStyle"
+                android:layout_marginRight="8dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:id="@+id/btn_a_r"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorLink"
+                android:text="Отредактировать"
+                />
 
+
+        </LinearLayout>
     </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
