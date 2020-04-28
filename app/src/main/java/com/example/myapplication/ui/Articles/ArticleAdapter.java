@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
@@ -139,9 +140,10 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
             LayoutInflater inflater=LayoutInflater.from(v.getRootView().getContext());
             View comment_window=inflater.inflate(R.layout.comment_window,null);
             alertbox.setView(comment_window);
-            
+
             alertbox.setTitle("Комментарии");
             final MaterialEditText yc=comment_window.findViewById(R.id.your_Commnebt_Field);
+            yc.setMinLines(2);
 
             final TextView tvc=comment_window.findViewById(R.id.comments);
 
@@ -163,30 +165,35 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
                   }
               });
 
-            final AppCompatButton acbc=comment_window.findViewById(R.id.btn_cooment_next);
+            final AppCompatImageButton acbc=comment_window.findViewById(R.id.btn_cooment_next);
             acbc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    services.child("Articles").child(ld.getName()).child("Comment").push().setValue(name+':'+yc.getText().toString());
-                    yc.setText("");
-                    services.child("Articles").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            tvc.setText("");
-                            String s = "";
-                            for(DataSnapshot ds:dataSnapshot.getChildren()){
-                                tvc.append(ds.getValue().toString());
-                                tvc.append(System.getProperty("line.separator"));
+                    if(yc.getText().toString().trim().equalsIgnoreCase("")){
+                        yc.setError("This field can not be blank");
+                    }
+                    else {
+                        services.child("Articles").child(ld.getName()).child("Comment").push().setValue(name + ':' + yc.getText().toString());
+                        yc.setText("");
+                        services.child("Articles").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                tvc.setText("");
+                                String s = "";
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    tvc.append(ds.getValue().toString());
+                                    tvc.append(System.getProperty("line.separator"));
+
+                                }
 
                             }
 
-                        }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                            }
+                        });
+                    }
 
                 }
             });
@@ -306,7 +313,8 @@ public int getItemCount() {
 public class ViewHolder extends RecyclerView.ViewHolder{
     private TextView txtavtor,txtname,txtmovie,nl;
     private EditText myTV;
-    private AppCompatButton btn_d,btn_r,btn_c;
+    private AppCompatButton btn_d,btn_r;
+    private AppCompatButton btn_c;
     private   ViewSwitcher switcher;
     private LikeButton lb;
     public ViewHolder(View itemView) {
@@ -315,7 +323,7 @@ public class ViewHolder extends RecyclerView.ViewHolder{
         txtmovie=(TextView)itemView.findViewById(R.id.avtortxt);
         btn_d=(AppCompatButton)itemView.findViewById(R.id.btn_a_d);
         btn_r=(AppCompatButton) itemView.findViewById(R.id.btn_a_r);
-        btn_c=(AppCompatButton) itemView.findViewById(R.id.btn_cooment);
+        btn_c= (AppCompatButton) itemView.findViewById(R.id.btn_cooment);
         myTV = (EditText) itemView.findViewById(R.id.avtor_2txt);
         lb=(LikeButton)itemView.findViewById(R.id.star_button);
         nl=(TextView)itemView.findViewById(R.id.number_liketxt);

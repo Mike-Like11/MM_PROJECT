@@ -23,20 +23,26 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:minLines="3"
-                android:textSize="12dp"
+                android:textSize="16dp"
                 android:lineSpacingMultiplier="3"
                 android:id="@+id/comments"
                 android:layout_marginRight="8dp"
                 android:textColor="@android:color/black"
                 />
 
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/your_Commnebt_Field"
             android:hint="Ваш коммент "
-            android:inputType="textLongMessage"
+            android:minLines="4"
+            app:errorEnabled="true"
+            android:inputType="textMultiLine"
             android:text=""
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimaryDark"
@@ -46,15 +52,17 @@
             app:met_primaryColor="@color/colorPrimary"
             app:met_singleLineEllipsis="true"
             android:layout_weight="5"/>
-        <androidx.appcompat.widget.AppCompatButton
-            style="?attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:id="@+id/btn_cooment_next"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
-            android:text="Добавить"
-            android:layout_weight="5"
-            />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_cooment_next"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:textColor="@color/colorPrimary"
+
+                app:srcCompat="@drawable/ic_menu_send2" />
+        </LinearLayout>
 
     </LinearLayout>
     </ScrollView>
