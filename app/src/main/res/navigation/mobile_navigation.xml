@@ -40,4 +40,9 @@
         android:name="com.example.myapplication.ui.send.SendFragment"
         android:label="@string/menu_send"
         tools:layout="@layout/fragment_my_work" />
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.myapplication.ui.send.SendFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_my_profile" />
 </navigation>
