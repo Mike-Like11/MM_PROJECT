@@ -255,7 +255,6 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
                             services.child("Articles").child(ld.getName()).updateChildren(map);
                             holder.myTV.setText(ld.getDescription());
                             */
-
                             services.child("Articles").child(ld.getName()).removeValue();
                             int position=holder.getAdapterPosition();
                             removeItem(position);
