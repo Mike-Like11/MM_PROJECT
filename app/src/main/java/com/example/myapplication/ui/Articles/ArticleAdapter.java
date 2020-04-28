@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 import com.example.myapplication.Models.Article;
@@ -291,6 +292,9 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
         else{
             holder.btn_d.setVisibility(View.INVISIBLE);
             holder.btn_r.setVisibility(View.INVISIBLE);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            holder.btn_c.setLayoutParams(params);
+
         }
 
 
