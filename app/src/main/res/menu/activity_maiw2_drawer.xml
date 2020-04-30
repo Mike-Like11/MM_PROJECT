@@ -3,43 +3,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/baseline_assignment_black_18dp"
-            android:title="@string/menu_free_task" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_my_task" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_my_work" />
-        <item
-            android:id="@+id/nav_tools"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_articles" />
-    </group>
+    <item android:title="Деятельность">
+        <menu>
+            <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/round_assignment_black_48"
+                android:title="@string/menu_free_task" />
+            <item
+                android:id="@+id/nav_gallery"
+                android:icon="@drawable/round_library_books_black_48"
+                android:title="@string/menu_my_task" />
+            <item
+                android:id="@+id/nav_slideshow"
+                android:icon="@drawable/baseline_video_library_black_48"
+                android:title="@string/menu_my_work" />
+        </menu>
+    </item>
 
     <item android:title="Сообщество">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/baseline_share_black_48"
                 android:title="@string/menu_share" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/baseline_bug_report_black_48"
                 android:title="@string/menu_send" />
+            <item
+                android:id="@+id/nav_tools"
+                android:icon="@drawable/baseline_message_black_48"
+                android:title="@string/menu_articles" />
         </menu>
     </item>
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_menu_profile"
-            android:title="@string/menu_profile" />
-    </group>
+    <item android:title="Аккаунт">
+        <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/baseline_person_black_48"
+                android:title="@string/menu_profile" />
+        </menu>
+    </item>
 
 </menu>
