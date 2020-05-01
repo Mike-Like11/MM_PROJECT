@@ -1,11 +1,13 @@
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.example.myapplication.Models.User;
+import com.example.myapplication.Models.User_name;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -21,11 +24,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 Button sign,register;
@@ -33,6 +40,7 @@ FirebaseAuth auth;
 FirebaseDatabase db;
 DatabaseReference users;
 RelativeLayout root;
+DatabaseReference services;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +66,10 @@ RelativeLayout root;
         });
 }
 private void showSignWindow(){
-    AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+    final AlertDialog.Builder dialog=new AlertDialog.Builder(this);
     dialog.setTitle("Войти");
     dialog.setMessage("Введите данные для входа ");
+    dialog.setPositiveButton("Войти",null);
     LayoutInflater inflater=LayoutInflater.from(this);
     View sign_window=inflater.inflate(R.layout.sign_window,null);
     dialog.setView(sign_window);
@@ -76,42 +85,55 @@ private void showSignWindow(){
     dialog.setPositiveButton("Войти", new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface , int which) {
+
+        }
+    });
+    final AlertDialog dialog1=dialog.create();
+    dialog1.show();
+    dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
             if(TextUtils.isEmpty(email.getText().toString())){
-                Snackbar.make(root,"Введите вашу почту",Snackbar.LENGTH_SHORT).show();
+                email.setError("Введите вашу почту");
+
                 return;
 
             }
 
             if(pass.getText().toString().length()<5){
-                Snackbar.make(root,"Введите ваш пароль(более 5 символов)",Snackbar.LENGTH_SHORT).show();
+                pass.setError("неправильный пароль");
                 return;
             }
             auth.signInWithEmailAndPassword(email.getText().toString(),pass.getText().toString())
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
+                            dialog1.dismiss();
                             startActivity(new Intent(MainActivity.this, MaiwActivity.class));
                             finish();
 
-                            }
+                        }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Snackbar.make(root,"Ошибка авторизации"+e.getMessage(),Snackbar.LENGTH_SHORT).show();
+                    email.setError("Ошибка авторизации "+e.getMessage());
                 }
             });
 
         }
     });
-    dialog.show();
 }
 private void showRegisterWindow(){
-    AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+    final AlertDialog.Builder dialog=new AlertDialog.Builder(this);
     dialog.setTitle("Зарегистрироваться");
+    dialog.setPositiveButton("Добавить",null);
+    dialog.setNegativeButton("отменить",null);
     dialog.setMessage("Введите все ваши данные для регистрации");
     LayoutInflater inflater=LayoutInflater.from(this);
     View register_window=inflater.inflate(R.layout.register_window,null);
     dialog.setView(register_window);
+dialog.setCancelable(false);
    final MaterialEditText email=register_window.findViewById(R.id.emailField);
    final MaterialEditText name=register_window.findViewById(R.id.nameField);
    final MaterialEditText phone=register_window.findViewById(R.id.telephoneField);
@@ -122,56 +144,107 @@ private void showRegisterWindow(){
             dialogInterface.dismiss();
         }
     });
+
     dialog.setPositiveButton("Добавить", new DialogInterface.OnClickListener() {
         @Override
-        public void onClick(DialogInterface dialogInterface , int which) {
-            if(TextUtils.isEmpty(email.getText().toString())){
-                Snackbar.make(root,"Введите вашу почту",Snackbar.LENGTH_SHORT).show();
-                return;
+        public void onClick(final DialogInterface dialogInterface , int which) {
+
 
             }
-            if(TextUtils.isEmpty(name.getText().toString())){
-                Snackbar.make(root,"Введите ваше имя",Snackbar.LENGTH_SHORT).show();
-                return;
+    });
 
-            }
-            if(TextUtils.isEmpty(phone.getText().toString())){
-                Snackbar.make(root,"Введите ваш телефон",Snackbar.LENGTH_SHORT).show();
-                return;
+final AlertDialog dialog1=dialog.create();
+dialog1.show();
+dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
 
-            }
-            if(pass.getText().toString().length()<5){
-                Snackbar.make(root,"Введите ваш пароль(более 5 символов)",Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            auth.createUserWithEmailAndPassword(email.getText().toString(),pass.getText().toString())
-                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            User user1=new User();
-                            user1.setEmail(email.getText().toString());
-                            user1.setName(name.getText().toString());
-                            user1.setPhone(phone.getText().toString());
-                            user1.setPass(pass.getText().toString());
-                            users.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user1)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                                            UserProfileChangeRequest profileUpdates =new UserProfileChangeRequest.Builder().setDisplayName(name.getText().toString()).build();
-                                            user.updateProfile(profileUpdates);
-                                            Snackbar.make(root,"Пользователь "+profileUpdates.getDisplayName()+" добавлен!",Snackbar.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                        }
-                    });
+        if(TextUtils.isEmpty(email.getText().toString())){
+            email.setError("Введите вашу почту");
 
 
 
         }
-    });
-dialog.show();
+        else {
+            if (TextUtils.isEmpty(name.getText().toString())) {
+                name.setError("Введите вашу имя");
+
+                return;
+
+            } else {
+                if (TextUtils.isEmpty(phone.getText().toString())) {
+                    phone.setError("Введите ваш телефон");
+
+                    return;
+
+                } else {
+                    if (pass.getText().toString().length() < 5) {
+                        pass.setError("Введите ваш пароль(более 5 символов)");
+
+                        return;
+                    } else {
+
+                        users.addValueEventListener(new ValueEventListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                boolean f=false;
+                                String s="";
+                                for (DataSnapshot childr : dataSnapshot.child("Users").child("User_name").getChildren()) {
+                                    User_name un=childr.getValue(User_name.class);
+                                    if (un != null && name.getText().toString().equals(un.getName())) {
+                                        f = true;
+                                    }
+                                }
+
+                                if(f==false){
+                                    register.setText("aaaa");
+                                    auth.createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString())
+                                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                                @Override
+                                                public void onSuccess(AuthResult authResult) {
+                                                    User user1 = new User();
+                                                    user1.setEmail(email.getText().toString());
+                                                    user1.setName(name.getText().toString());
+                                                    user1.setPhone(phone.getText().toString());
+                                                    user1.setPass(pass.getText().toString());
+                                                    User_name un=new User_name();
+                                                    un.setName(user1.getDisplayName());
+                                                    users.child("Users").child("User_name").child(user1.getDisplayName()).setValue(un);
+                                                    users.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user1)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(name.getText().toString()).build();
+                                                                    user.updateProfile(profileUpdates);
+                                                                    Snackbar.make(root, "Пользователь " + profileUpdates.getDisplayName() + " добавлен!", Snackbar.LENGTH_SHORT).show();
+                                                                    dialog1.dismiss();
+                                                                }
+                                                            });
+
+                                                }
+                                            });
+                                }
+                                else {
+                                    name.setError("данное имя уже занято");
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+
+                        });
+
+                    }
+                }
+            }
+        }
+    }
+});
 }
 }

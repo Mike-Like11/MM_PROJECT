@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/name_article_Field"
             android:hint="название"
+            android:autoSizeTextType="uniform"
             android:inputType="text"
             android:text=""
             android:textColor="@color/colorPrimary"
@@ -23,12 +24,14 @@
             app:met_floatingLabel="highlight"
             app:met_baseColor="#0056d3"
             app:met_primaryColor="#982360"
-            app:met_singleLineEllipsis="true"/>
+            app:met_singleLineEllipsis="true"
+            app:errorEnabled="true"/>
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/description_article_Field"
             android:hint="описание"
+            android:autoSizeTextType="uniform"
             android:scrollbars = "vertical"
             android:inputType="textMultiLine"
             android:text=""

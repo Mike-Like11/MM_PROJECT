@@ -146,7 +146,7 @@ public class ArticlesFragment extends Fragment {
         AlertDialog.Builder dialog=new AlertDialog.Builder(mContext);
         dialog.setTitle("Ваш рассказ");
         dialog.setMessage("Введите все, что хотите поведать ");
-        LayoutInflater inflater=LayoutInflater.from(mContext);
+        final LayoutInflater inflater=LayoutInflater.from(mContext);
         View article_window=inflater.inflate(R.layout.article_window,null);
         dialog.setView(article_window);
         final MaterialEditText name_a=article_window.findViewById(R.id.name_article_Field);
@@ -162,7 +162,7 @@ public class ArticlesFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int which) {
 
                 if (TextUtils.isEmpty(name_a.getText().toString())) {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Вы забыли ввести ваше название", Snackbar.LENGTH_SHORT).show();
+                    name_a.setError("Вы забыли ввести ваше название");
                     return;
                 }
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

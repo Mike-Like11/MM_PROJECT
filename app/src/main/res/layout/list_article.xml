@@ -26,6 +26,7 @@
             android:id="@+id/nametxt"
             android:layout_weight="6"
             android:textColor="@android:color/holo_blue_bright"
+            android:autoSizeTextType="uniform"
             android:textSize="30sp"
             />
         <com.like.LikeButton
@@ -52,6 +53,7 @@
             android:layout_marginTop="8dp"
             android:id="@+id/avtortxt"
             android:layout_weight="6"
+            android:autoSizeTextType="uniform"
             android:textColor="?android:attr/textColorSecondary"
             />
         <TextView
@@ -60,7 +62,7 @@
         android:layout_marginTop="8dp"
             android:layout_weight="1"
         android:id="@+id/number_liketxt"
-
+            android:autoSizeTextType="uniform"
         android:textColor="?android:attr/textColorSecondary"
         />
         </LinearLayout>
@@ -75,6 +77,7 @@
                 android:textColor="@android:color/black"
                 android:background="@null"
                 android:textSize="20sp"
+                android:autoSizeTextType="uniform"
 
                 />
 
