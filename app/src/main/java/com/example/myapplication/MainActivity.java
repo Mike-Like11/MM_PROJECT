@@ -198,7 +198,7 @@ dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnCli
                                 }
 
                                 if(f==false){
-                                    register.setText("aaaa");
+
                                     auth.createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString())
                                             .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                                 @Override

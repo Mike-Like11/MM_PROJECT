@@ -112,13 +112,17 @@ public class ArticlesFragment extends Fragment {
                         Article l=npsnapshot.child("Article").getValue(Article.class);
                         boolean liki=false;
                         for(DataSnapshot ds:npsnapshot.child("Likes").getChildren()) {
-                           String like = (String) ds.getValue();
-                            if (Objects.equals(like, email)) {
-                                ds.getRef().removeValue();
+                         Like like=ds.getValue(Like.class);
+                            if (Objects.equals(like.getAmail(), name)) {
                               l.setLike_or_not(true);
-                                break;
+                              liki=true;
+                               break;
                             }
                         }
+                        if(!liki && l!=null){
+                            l.setLike_or_not(false);
+                        }
+
 
                         assert l != null;
                         if(!l.getName().equals("") &&!l.getDescription().equals("")) {
@@ -143,17 +147,19 @@ public class ArticlesFragment extends Fragment {
         return root;
     }
     private void showArticleWindow() {
-        AlertDialog.Builder dialog=new AlertDialog.Builder(mContext);
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
         dialog.setTitle("Ваш рассказ");
         dialog.setMessage("Введите все, что хотите поведать ");
-        final LayoutInflater inflater=LayoutInflater.from(mContext);
-        View article_window=inflater.inflate(R.layout.article_window,null);
+        dialog.setNegativeButton("Отменить", null);
+        dialog.setPositiveButton("Добавить", null);
+        final LayoutInflater inflater = LayoutInflater.from(mContext);
+        View article_window = inflater.inflate(R.layout.article_window, null);
         dialog.setView(article_window);
-        final MaterialEditText name_a=article_window.findViewById(R.id.name_article_Field);
-        final MaterialEditText description=article_window.findViewById(R.id.description_article_Field);
+        final MaterialEditText name_a = article_window.findViewById(R.id.name_article_Field);
+        final MaterialEditText description = article_window.findViewById(R.id.description_article_Field);
         dialog.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface , int which) {
+            public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
             }
         });
@@ -161,6 +167,17 @@ public class ArticlesFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
 
+
+            }
+
+        });
+
+
+        final AlertDialog dialog1 = dialog.create();
+        dialog1.show();
+        dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (TextUtils.isEmpty(name_a.getText().toString())) {
                     name_a.setError("Вы забыли ввести ваше название");
                     return;
@@ -169,19 +186,21 @@ public class ArticlesFragment extends Fragment {
                 // Name, email address, and profile photo Url
                 String name = user.getDisplayName();
                 String email = user.getEmail();
-                Article a=new Article();
+                Article a = new Article();
                 a.setName_narrator(name);
                 a.setName(name_a.getText().toString());
                 a.setDescription(description.getText().toString());
                 a.setLike(0);
-                final Like l=new Like();
+                final Like l = new Like();
                 l.setAmail("aaaa");
                 a.setLike_or_not(false);
 
                 services.child("Articles").child(name_a.getText().toString()).child("Article").setValue(a).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        services.child("Articles").child(name_a.getText().toString()).child("Likes").setValue(l);
+                        services.child("Articles").child(name_a.getText().toString()).child("Likes").child(l.getAmail()).setValue(l);
+                        dialog1.dismiss();
+                        dialog1.cancel();
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -193,10 +212,6 @@ public class ArticlesFragment extends Fragment {
                     ;
                 });
             }
-
         });
-
-
-        dialog.show();
     }
 }

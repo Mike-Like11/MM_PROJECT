@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,9 +42,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder>{
 private List<Article>listData;
+private boolean liki;
+private boolean likos;
+private  boolean buto;
+private  String s;
 private Context context;
     FirebaseDatabase db;
     DatabaseReference services;
@@ -61,7 +67,7 @@ public ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
 
 @Override
 public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final Article ld=listData.get(position);
+        final Article ld =listData.get(position);
         if(!ld.getName_narrator().equals("") &&!ld.getName().equals("") &&!ld.getDescription().equals("")) {
             holder.txtname.setText(ld.getName());
             holder.txtmovie.setText("Автор: " + ld.getName_narrator());
@@ -70,67 +76,117 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
             holder.nl.setText(String.valueOf(ld.getLike()));
 
     holder.myTV.setEnabled(false);
+
+   setliki(holder.getAdapterPosition(),ld.getName(),holder);
     db= FirebaseDatabase.getInstance();
     services=db.getReference();
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     // Name, email address, and profile photo Url
     final String name = user.getDisplayName();
     final String email = user.getEmail();
-    if(ld.isLike_or_not()) {
-    holder.lb.setLiked(true);
-    }
-    else{
-        holder.lb.setLiked(false);
-    }
-
     holder.lb.setOnLikeListener(new OnLikeListener() {
-        @Override
-        public void liked(LikeButton likeButton) {
-           ld.setLike(ld.getLike()+1);
-            holder.nl.setText(String.valueOf(ld.getLike()));
-            services.child("Articles").child(ld.getName().toString()).child("Likes").push().setValue(email);
-            holder.lb.setLiked(true);
-            ld.setLike_or_not(true);
+                                    @Override
+                                    public void liked(LikeButton likeButton) {
+                                        liki = true;
+                                        services.addValueEventListener(new ValueEventListener() {
+                                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if (liki) {
+                                                    boolean yes = false;
+                                                    Like like2 = new Like();
+                                                    for (DataSnapshot ds : dataSnapshot.child("Articles").child(ld.getName()).child("Likes").getChildren()) {
+                                                        Like like = ds.getValue(Like.class);
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                                            if (Objects.equals(like.getAmail(), name)) {
+                                                                like2 = like;
+                                                                yes = true;
 
-            services.child("Articles").child(ld.getName()).child("Article").child("like").setValue(ld.getLike());
-            services.child("Articles").child(ld.getName()).child("Article").child("like_or_not").setValue(ld.isLike_or_not());
-        }
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                    if (yes) {
+                                                        services.child("Articles").child(ld.getName()).child("Likes").child(like2.getAmail()).removeValue();
+                                                        ld.setLike(ld.getLike() - 1);
+                                                        holder.nl.setText(String.valueOf(ld.getLike()));
 
-        @Override
-        public void unLiked(LikeButton likeButton) {
-            ld.setLike(ld.getLike()-1);
-            holder.nl.setText(String.valueOf(ld.getLike()));
-            ld.setLike_or_not(false);
-            services.child("Articles").child(ld.getName()).child("Article").child("like").setValue(ld.getLike());
-            services.child("Articles").child(ld.getName()).child("Article").child("like_or_not").setValue(ld.isLike_or_not());
-            holder.lb.setLiked(false);
+                                                        services.child("Articles").child(ld.getName()).child("Article").child("like").setValue(ld.getLike());
+                                                        liki = false;
+                                                    } else {
+                                                        ld.setLike(ld.getLike() + 1);
+                                                        holder.nl.setText(String.valueOf(ld.getLike()));
+                                                        like2.setAmail(name);
+                                                        holder.lb.setLiked(false);
 
 
-            services.child("Articles").child(ld.getName().toString()).child("Likes").removeEventListener(new ValueEventListener(){
+                                                        services.child("Articles").child(ld.getName()).child("Article").child("like").setValue(ld.getLike());
+                                                        services.child("Articles").child(ld.getName()).child("Likes").child(like2.getAmail()).setValue(like2);
 
-                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot ds:dataSnapshot.getChildren()){
+                                                        liki = false;
+                                                        notifyItemChanged(holder.getAdapterPosition());
+                                                    }
+                                                }
+                                            }
 
-                        for(DataSnapshot ds1:ds.child("Likes").getChildren()) {
-                            String like = (String) ds1.getValue();
-                            if (Objects.equals(like, email)) {
-                               ds.getRef().removeValue();
-                                break;
-                            }
-                        }
-                    }
-                }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            }
+                                        });
+                                    }
 
-                }
-            });
-            holder.lb.setLiked(false);
-        }
-    });
+                                    @Override
+                                    public void unLiked(LikeButton likeButton) {
+                                        liki = true;
+                                        services.addValueEventListener(new ValueEventListener() {
+                                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if (liki) {
+                                                    boolean yes = false;
+                                                    Like like2 = new Like();
+                                                    for (DataSnapshot ds : dataSnapshot.child("Articles").child(ld.getName()).child("Likes").getChildren()) {
+                                                        Like like = ds.getValue(Like.class);
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                                            if (Objects.equals(like.getAmail(), name)) {
+                                                                like2 = like;
+                                                                yes = true;
+
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                    if (yes) {
+                                                        services.child("Articles").child(ld.getName()).child("Likes").child(like2.getAmail()).removeValue();
+                                                        ld.setLike(ld.getLike() - 1);
+                                                        holder.lb.setLiked(false);
+                                                        notifyItemChanged(holder.getAdapterPosition());
+
+                                                        holder.nl.setText(String.valueOf(ld.getLike()));
+                                                        services.child("Articles").child(ld.getName()).child("Article").child("like").setValue(ld.getLike());
+                                                        liki = false;
+                                                    } else {
+
+                                                        like2.setAmail(name);
+                                                        services.child("Articles").child(ld.getName()).child("Likes").child(like2.getAmail()).setValue(like2);
+                                                        ld.setLike(ld.getLike() + 1);
+
+                                                        holder.nl.setText(String.valueOf(ld.getLike()));
+                                                        services.child("Articles").child(ld.getName()).child("Article").child("like").setValue(ld.getLike());
+                                                        liki = false;
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+                                });
+
 
     holder.btn_c.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -221,27 +277,43 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
         if(ld.user_s(ld.getName_narrator(),name)){
             holder.btn_d.setVisibility(View.VISIBLE);
             holder.btn_r.setVisibility(View.VISIBLE);
+
             holder.btn_r.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View View) {
                     //showArticle_Rewrite_Window(ld);
                      //or switcher.showPrevious();
-                    holder.myTV.setEnabled(true);
-                    holder.btn_d.setText("Отменить изменения");
-                    holder.btn_r.setText("Сохранить изменения");
-                    holder.btn_d.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(android.view.View v) {
-                            holder.myTV.setEnabled(false);
-                            holder.myTV.setText(ld.getDescription());
-                            holder.btn_d.setText("Удалить");
-                            holder.btn_r.setText("Поредачить");
+                    buto=true;
 
-                        }
-                    });
-                    holder.btn_r.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(android.view.View v) {
+
+
+                        holder.myTV.setEnabled(true);
+                        holder.btn_d.setText("Отменить изменения");
+                        holder.btn_r.setText("Сохранить изменения");
+
+
+                    new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                        holder.btn_d.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(android.view.View v) {
+                                holder.myTV.setEnabled(false);
+                                holder.myTV.setText(ld.getDescription());
+                                holder.btn_d.setText("Удалить");
+                                holder.btn_r.setText("Изменить");
+                                try {
+                                    TimeUnit.SECONDS.sleep(2);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                buto=false;
+
+                            }
+                        });
+                        holder.btn_r.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(android.view.View v) {
                             /*
 
                             Map map = new HashMap<>();
@@ -255,20 +327,33 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
                             services.child("Articles").child(ld.getName()).updateChildren(map);
                             holder.myTV.setText(ld.getDescription());
                             */
-                            services.child("Articles").child(ld.getName()).removeValue();
-                            int position=holder.getAdapterPosition();
-                            removeItem(position);
-                            ld.setDescription(holder.myTV.getText().toString());
-                            services.child("Articles").child(ld.getName()).child("Article").setValue(ld);
-                            final Like l=new Like();
-                            l.setAmail("aaaa");
-                            services.child("Articles").child(ld.getName()).child("Likes").setValue(l);
-                            holder.myTV.setEnabled(false);
-                            holder.btn_d.setText("Удалить");
-                            holder.btn_r.setText("Поредачить");
+                               /* services.child("Articles").child(ld.getName()).removeValue();
+                                int position = holder.getAdapterPosition();
+                                removeItem(position);
+                                */
+                                ld.setDescription(holder.myTV.getText().toString());
+                                services.child("Articles").child(ld.getName()).child("Article").setValue(ld);
+                                /*
+                                final Like l = new Like();
+                                l.setAmail("aaaa");
+                                services.child("Articles").child(ld.getName()).child("Likes").child(l.getAmail()).setValue(l);
+                                */
+                                holder.myTV.setEnabled(false);
+                                holder.btn_d.setText("Удалить");
+                                holder.btn_r.setText("Изменить");
+                                try {
+                                    TimeUnit.SECONDS.sleep(2);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                buto=false;
 
-                        }
-                    });
+                            }
+                        });
+        }
+},500);
+
+
 
 
                 }
@@ -306,9 +391,49 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
         // NOTE: don't call notifyDataSetChanged()
         notifyItemRemoved(position);
     }
+    public void setliki(final int postion, String ld, @NonNull final ViewHolder holder) {
+        db = FirebaseDatabase.getInstance();
+        services = db.getReference().child("Articles").child(ld);
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // Name, email address, and profile photo Url
+        final String name = user.getDisplayName();
+        final String email = user.getEmail();
+        likos = false;
+        s = ld;
+        services.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int i = 0;
+                s = "aaaaaa";
+                for (DataSnapshot ds : dataSnapshot.child("Likes").getChildren()) {
+                    Like like = ds.getValue(Like.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (Objects.equals(like.getAmail(), name)) {
+                            s=like.getAmail();
+                            likos = true;
+                            break;
+                        }
+                    }
+                }
+                if (likos && dataSnapshot.exists() && !s.equals("aaaaaa")) {
+                    holder.lb.setLiked(true);
+                } else {
+                    holder.lb.setLiked(false);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
-        @Override
+
+    }
+
+
+
+    @Override
 public int getItemCount() {
         return listData.size();
         }
@@ -320,6 +445,9 @@ public class ViewHolder extends RecyclerView.ViewHolder{
     private AppCompatButton btn_c;
     private   ViewSwitcher switcher;
     private LikeButton lb;
+    private String s;
+    FirebaseDatabase db;
+    DatabaseReference services;
     public ViewHolder(View itemView) {
         super(itemView);
         txtname=(TextView)itemView.findViewById(R.id.nametxt);
@@ -330,6 +458,11 @@ public class ViewHolder extends RecyclerView.ViewHolder{
         myTV = (EditText) itemView.findViewById(R.id.avtor_2txt);
         lb=(LikeButton)itemView.findViewById(R.id.star_button);
         nl=(TextView)itemView.findViewById(R.id.number_liketxt);
+        db= FirebaseDatabase.getInstance();
+        services=db.getReference();
+        services.keepSynced(true);
+
+
     }
 }
 }
