@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -18,18 +19,11 @@ public class MyProfileFragment extends Fragment{
 
     private MyProfileModel myProfileModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        myProfileModel =
-                ViewModelProviders.of(this).get(MyProfileModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        myProfileModel = ViewModelProviders.of(this).get(MyProfileModel.class);
         View root = inflater.inflate(R.layout.fragment_my_profile, container, false);
-        final TextView textView = root.findViewById(R.id.text_my_profile);
-        myProfileModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        final TextView textView = root.findViewById(R.id.textView_name_user);
+        final ImageView imageView = root.findViewById(R.id.imageView);
         return root;
     }
 }
