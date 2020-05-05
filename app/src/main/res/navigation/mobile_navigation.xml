@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.myapplication.ui.MyTask.GalleryFragment"
+        android:name="com.example.myapplication.ui.MyTask.MyTaskFragment"
         android:label="@string/menu_my_task"
         tools:layout="@layout/fragment_my_task" />
 
