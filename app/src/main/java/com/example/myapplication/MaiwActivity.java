@@ -70,7 +70,6 @@ public class MaiwActivity extends AppCompatActivity {
         teu.setText(email);
         TextView tnu = (TextView)hView.findViewById(R.id.textView_name_user);
         tnu.setText(name);
-
     }
 
     @Override
