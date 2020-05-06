@@ -84,10 +84,10 @@ private void showSignWindow(){
     });
     dialog.setPositiveButton("Войти", new DialogInterface.OnClickListener() {
         @Override
-        public void onClick(DialogInterface dialogInterface , int which) {
+    public void onClick(DialogInterface dialogInterface , int which) {
 
-        }
-    });
+    }
+});
     final AlertDialog dialog1=dialog.create();
     dialog1.show();
     dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -167,7 +167,7 @@ dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnCli
         }
         else {
             if (TextUtils.isEmpty(name.getText().toString())) {
-                name.setError("Введите вашу имя");
+                name.setError("Введите ваше имя");
 
                 return;
 
