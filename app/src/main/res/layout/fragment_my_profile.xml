@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -36,16 +37,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="75dp"
         android:layout_marginTop="150dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/pass"
             android:layout_margin="4dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="16dp"
             android:layout_marginLeft="5dp"
+
             android:background="@drawable/btn"
             android:ellipsize="marquee"
             android:gravity="center"
@@ -58,31 +60,33 @@
         <Button
             android:id="@+id/photo"
             android:layout_margin="4dp"
-            android:padding="16dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
             android:background="@drawable/btn"
             android:ellipsize="marquee"
-            android:gravity="center"
             android:fontFamily="@font/montserrat"
+            android:gravity="center"
+            android:padding="16dp"
             android:text="@string/profile_photo"
-            android:textColor="@android:color/black"
-            android:layout_width="match_parent" />
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="225dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="200dp"
+        android:orientation="horizontal"
+       >
 
         <Button
             android:id="@+id/exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="105dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="50dp"
             android:layout_marginRight="105dp"
             android:background="@drawable/btn"
             android:ellipsize="marquee"
