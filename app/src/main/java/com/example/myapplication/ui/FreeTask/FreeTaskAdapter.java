@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.myapplication.Models.Article;
+import com.example.myapplication.Models.Request;
 import com.example.myapplication.R;
 import com.example.myapplication.ui.Articles.ArticleAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,14 +37,14 @@ import java.util.concurrent.TimeUnit;
 
 public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHolder> {
 
-    private List<FreeTaskData> listData;
+    private List<Request> listData;
     private String s;
     private Context context;
     FirebaseDatabase db;
     private  boolean buto;
     DatabaseReference services;
 
-    public FreeTaskAdapter(List<FreeTaskData> listData, Context context) {
+    public FreeTaskAdapter(List<Request> listData, Context context) {
         this.listData = listData;
         this.context = context;
     }
@@ -55,12 +56,12 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
     }
 
     public void onBindViewHolder(@NonNull final FreeTaskAdapter.ViewHolder holder, final int position) {
-        final FreeTaskData ld = listData.get(position);
-        if (!ld.getName_narrator().equals("") && !ld.getName().equals("") && !ld.getReq().equals("")) {
-            holder.txtname.setText(ld.getName());
-            holder.txtmovie.setText("Автор: " + ld.getName_narrator());
-            holder.myTV.setText(ld.getReq());
-            holder.myAdress.setText(ld.getAdress());
+        final Request ld = listData.get(position);
+        if (!ld.getName_1().equals("") && !ld.getName_2().equals("") && !ld.getTask().equals("")) {
+            holder.txtname.setText(ld.getName_2());
+            holder.txtmovie.setText("Автор: " + ld.getName_1());
+            holder.myTV.setText(ld.getTask());
+            holder.myAdress.setText(ld.getAddress());
         }
 
         db = FirebaseDatabase.getInstance();
@@ -87,7 +88,7 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
                 final TextView tvc=comment_window.findViewById(R.id.comments);
 
                 tvc.setText("здесь ничего нет");
-                services.child("Requests").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
+                services.child("Requests").child(ld.getName_2()).child("Comment").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         tvc.setText("");
@@ -112,9 +113,9 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
                             yc.setError("This field can not be blank");
                         }
                         else {
-                            services.child("Requests").child(ld.getName()).child("Comment").push().setValue(name + ':' + yc.getText().toString());
+                            services.child("Requests").child(ld.getName_2()).child("Comment").push().setValue(name + ':' + yc.getText().toString());
                             yc.setText("");
-                            services.child("Requests").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
+                            services.child("Requests").child(ld.getName_2()).child("Comment").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     tvc.setText("");
@@ -143,7 +144,7 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
             }
         });
 
-        if(!ld.user_s(ld.getName_narrator(),name)){
+        if(!ld.user_s(ld.getName_1(),name)){
             holder.btn_ta.setVisibility(View.VISIBLE);
 
             holder.btn_ta.setOnClickListener(new View.OnClickListener() {

@@ -60,4 +60,13 @@ public class Request {
     public void setData(String data) {
         this.data = data;
     }
+
+    public boolean user_s(String name_narrator,String user){
+        if(name_narrator.equals(user)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

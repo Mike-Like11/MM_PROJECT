@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Models.Article;
 import com.example.myapplication.Models.Like;
+import com.example.myapplication.Models.Request;
 import com.example.myapplication.R;
 import com.example.myapplication.ui.Articles.ArticleAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,7 +45,7 @@ public class FreeTaskFragment extends Fragment {
     FirebaseDatabase db;
     DatabaseReference services;
 
-    private List<FreeTaskData> listData;
+    private List<Request> listData;
 
     private FreeTaskAdapter adapter;
 
@@ -70,9 +71,9 @@ public class FreeTaskFragment extends Fragment {
                 if (dataSnapshot.exists()){
                     listData.clear();
                     for (DataSnapshot npsnapshot : dataSnapshot.child("Requests").getChildren()){
-                        FreeTaskData l=npsnapshot.child("Task").getValue(FreeTaskData.class);
+                        Request l=npsnapshot.child("Task").getValue(Request.class);
                         assert l != null;
-                        if(!l.getName().equals("") &&!l.getReq().equals("")) {
+                        if(!l.getName_2().equals("") &&!l.getTask().equals("")) {
                             listData.add(l);
                         }
                     }
