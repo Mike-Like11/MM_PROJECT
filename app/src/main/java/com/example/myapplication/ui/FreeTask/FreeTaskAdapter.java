@@ -58,10 +58,11 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
     public void onBindViewHolder(@NonNull final FreeTaskAdapter.ViewHolder holder, final int position) {
         final Request ld = listData.get(position);
         if (!ld.getName_1().equals("") && !ld.getName_2().equals("") && !ld.getTask().equals("")) {
-            holder.txtname.setText(ld.getName_2());
-            holder.txtmovie.setText("Автор: " + ld.getName_1());
-            holder.myTV.setText(ld.getTask());
-            holder.myAdress.setText(ld.getAddress());
+            holder.txtname.setText(ld.getTask());
+            holder.txtmovie.setText("Имя заказчика: " + ld.getName_1());
+            holder.myTV.setText("Описание: "+ld.getDescription());
+            holder.myAdress.setText("Место выполнения: "+ld.getAddress());
+            holder.myData.setText("Дата: "+ld.getData());
         }
 
         db = FirebaseDatabase.getInstance();
@@ -81,7 +82,7 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
                 View comment_window=inflater.inflate(R.layout.comment_window,null);
                 alertbox.setView(comment_window);
 
-                alertbox.setTitle("Комментарии");
+                alertbox.setTitle("Вопросы");
                 final MaterialEditText yc=comment_window.findViewById(R.id.your_Commnebt_Field);
                 yc.setMinLines(2);
 
@@ -144,7 +145,7 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
             }
         });
 
-        if(!ld.user_s(ld.getName_1(),name)){
+        if(ld.user_s(ld.getName_1(),name)){
             holder.btn_ta.setVisibility(View.VISIBLE);
 
             holder.btn_ta.setOnClickListener(new View.OnClickListener() {
@@ -160,10 +161,6 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
 
                         }
                     },500);
-
-
-
-
                 }
             });
         }
@@ -176,8 +173,7 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txtavtor, txtname, txtmovie, nl, myAdress;
-        private EditText myTV;
+        private TextView txtavtor, txtname, txtmovie, nl, myAdress, myTV, myData;
         private AppCompatButton btn_ta;
         private AppCompatButton btn_co;
         private ViewSwitcher switcher;
@@ -195,7 +191,8 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
             //btn_r=(AppCompatButton) itemView.findViewById(R.id.btn_a_r);*/
             btn_co = (AppCompatButton) itemView.findViewById(R.id.btn_cooments);
 
-            myTV = (EditText) itemView.findViewById(R.id.avtor_2);
+            myTV = (TextView) itemView.findViewById(R.id.avtor_2);
+            myData = (TextView) itemView.findViewById(R.id.myData);
             //lb = (LikeButton) itemView.findViewById(R.id.star_button);
             db = FirebaseDatabase.getInstance();
             services = db.getReference();

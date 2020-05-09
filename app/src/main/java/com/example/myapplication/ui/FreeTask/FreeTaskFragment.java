@@ -70,11 +70,13 @@ public class FreeTaskFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     listData.clear();
-                    for (DataSnapshot npsnapshot : dataSnapshot.child("Requests").getChildren()){
-                        Request l=npsnapshot.child("Task").getValue(Request.class);
+                    for (DataSnapshot npsnapshot : dataSnapshot.child("Requests").getChildren()) {
+                        Request l = npsnapshot.child("Task").getValue(Request.class);
                         assert l != null;
-                        if(!l.getName_2().equals("") &&!l.getTask().equals("")) {
-                            listData.add(l);
+                        if (!name.equals(l.getName_1())){
+                            if (!l.getName_2().equals("") && !l.getTask().equals("")) {
+                                listData.add(l);
+                            }
                         }
                     }
 
