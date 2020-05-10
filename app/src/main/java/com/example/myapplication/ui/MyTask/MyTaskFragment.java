@@ -3,6 +3,7 @@ package com.example.myapplication.ui.MyTask;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,42 +12,62 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.MaiwActivity;
 import com.example.myapplication.MapActivity;
 import com.example.myapplication.Models.Request;
 import com.example.myapplication.R;
+import com.example.myapplication.ui.FreeTask.FreeTaskAdapter;
+import com.example.myapplication.ui.FreeTask.FreeTaskModel;
+import com.example.myapplication.ui.MyTask.MyTaskModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyTaskFragment extends Fragment {
+    private MyTaskModel myTaskModel;
+    private RecyclerView rv;
     private Context mContext;
     FloatingActionButton fb;
+    private List<Request> listData;
     FirebaseDatabase db;
     DatabaseReference services;
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
+    private MyTaskAdapter adapter;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        myTaskModel = ViewModelProviders.of(this).get(MyTaskModel.class);
         View root = inflater.inflate(R.layout.fragment_my_task, container, false);
         Intent intent=new Intent(getContext(),MapActivity.class);
         mContext=getActivity();
         fb=(FloatingActionButton) root.findViewById(R.id.fab_my_task);
         db=FirebaseDatabase.getInstance();
         services=db.getReference();
+        rv=(RecyclerView)root.findViewById(R.id.recycler_view);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(mContext));
+        listData=new ArrayList<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         // Name, email address, and profile photo Url
-        String name = user.getDisplayName();
-        String email = user.getEmail();
+        final String name = user.getDisplayName();
+        final String email = user.getEmail();
+
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,9 +75,37 @@ public class MyTaskFragment extends Fragment {
             }
         });
 
+        services.addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    listData.clear();
+                    for (DataSnapshot npsnapshot : dataSnapshot.child("Requests").getChildren()) {
+                        Request l = npsnapshot.child("Task").getValue(Request.class);
+                        assert l != null;
+                        if (name.equals(l.getName_1())){
+                            if (!l.getName_2().equals("") && !l.getTask().equals("")) {
+                                listData.add(l);
+                            }
+                        }
+                    }
 
+                    adapter=new MyTaskAdapter(listData,mContext);
+                    rv.setAdapter(adapter);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         return root;
     }
+
     private void showRequestWindow(){
         AlertDialog.Builder dialog=new AlertDialog.Builder(mContext);
 
@@ -86,6 +135,7 @@ public class MyTaskFragment extends Fragment {
             }
 
         });
+
         final AlertDialog dialog1=dialog.create();
         dialog1.show();
         dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {

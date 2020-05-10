@@ -13,6 +13,7 @@ public class Request {
         this.address = address;
         this.data = data;
     }
+
     public String getName_1() {
         return name_1;
     }

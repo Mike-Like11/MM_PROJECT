@@ -74,7 +74,7 @@ public class FreeTaskFragment extends Fragment {
                         Request l = npsnapshot.child("Task").getValue(Request.class);
                         assert l != null;
                         if (!name.equals(l.getName_1())){
-                            if (!l.getName_2().equals("") && !l.getTask().equals("")) {
+                            if (l.getName_2().equals("No") && !l.getTask().equals("")) {
                                 listData.add(l);
                             }
                         }
