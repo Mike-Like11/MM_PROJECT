@@ -78,7 +78,7 @@
                 android:layout_marginLeft="120dp"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorLink"
-                android:text="Вопросы"
+                android:text="Чат"
                 android:layout_weight="1"
                 />
 

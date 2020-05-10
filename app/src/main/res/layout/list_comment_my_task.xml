@@ -1,0 +1,39 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textStyle="normal|bold"
+        android:id="@+id/message_name"
+        android:layout_alignParentLeft="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:textStyle="normal|bold"
+        android:id="@+id/message_time"
+        android:layout_alignParentRight="true" />
+
+<com.github.library.bubbleview.BubbleTextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:padding="10dp"
+    android:textColor="@android:color/black"
+    app:arrowWidth="8dp"
+    app:angle="8dp"
+    app:arrowHeight="10dp"
+    app:arrowPosition="14dp"
+    app:arrowLocation="left"
+    app:arrowCenter="true"
+    app:bubbleColor="#81c639"
+    android:id="@+id/comments_my_task"/>
+</RelativeLayout>

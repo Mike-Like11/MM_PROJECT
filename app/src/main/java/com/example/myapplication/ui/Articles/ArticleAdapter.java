@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,6 +39,7 @@ import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +53,8 @@ private boolean likos;
 private  boolean buto;
 private  String s;
 private Context context;
+    private CommentAdapter cadapter;
+    private List<String>CommentData;
     FirebaseDatabase db;
     DatabaseReference services;
 public ArticleAdapter(List<Article> listData,Context context) {
@@ -196,23 +200,27 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
 
             LayoutInflater inflater=LayoutInflater.from(v.getRootView().getContext());
             View comment_window=inflater.inflate(R.layout.comment_window,null);
+            RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
+           rv_c.setHasFixedSize(true);
+           rv_c.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
+           CommentData=new ArrayList<>();
             alertbox.setView(comment_window);
 
             alertbox.setTitle("Комментарии");
             final MaterialEditText yc=comment_window.findViewById(R.id.your_Commnebt_Field);
             yc.setMinLines(2);
 
-            final TextView tvc=comment_window.findViewById(R.id.comments);
 
-            tvc.setText("здесь ничего нет");
+
+
               services.child("Articles").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
                   @Override
                   public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                      tvc.setText("");
+
                       String s = "";
+                      CommentData.clear();
                       for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                          tvc.append(ds.getValue().toString());
-                          tvc.append(System.getProperty("line.separator"));
+                          CommentData.add(ds.getValue().toString());
 
                       }
                   }
@@ -221,6 +229,8 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
 
                   }
               });
+            cadapter=new CommentAdapter(CommentData,v.getRootView().getContext());
+            rv_c.setAdapter(cadapter);
 
             final AppCompatImageButton acbc=comment_window.findViewById(R.id.btn_cooment_next);
             acbc.setOnClickListener(new View.OnClickListener() {
@@ -235,42 +245,29 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
                         services.child("Articles").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                tvc.setText("");
-                                String s = "";
+                                CommentData.clear();
                                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                    tvc.append(ds.getValue().toString());
-                                    tvc.append(System.getProperty("line.separator"));
-
+                                    CommentData.add(ds.getValue().toString());
                                 }
-
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-
                             }
                         });
                     }
 
                 }
             });
-
+            cadapter=new CommentAdapter(CommentData,v.getRootView().getContext());
+            rv_c.setAdapter(cadapter);
 
             alertbox.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
                 @Override public void onClick(DialogInterface dialog, int arg1) {
                    dialog.dismiss();
                 }
             });
-
-
-
-
             alertbox.show();
         }
-
-
-
-
               });
 
 
@@ -447,6 +444,10 @@ public class ViewHolder extends RecyclerView.ViewHolder{
     private LikeButton lb;
     private String s;
     FirebaseDatabase db;
+    private List<String>CommentData;
+
+    private CommentAdapter cadapter;
+
     DatabaseReference services;
     public ViewHolder(View itemView) {
         super(itemView);
@@ -458,6 +459,7 @@ public class ViewHolder extends RecyclerView.ViewHolder{
         myTV = (EditText) itemView.findViewById(R.id.avtor_2txt);
         lb=(LikeButton)itemView.findViewById(R.id.star_button);
         nl=(TextView)itemView.findViewById(R.id.number_liketxt);
+
         db= FirebaseDatabase.getInstance();
         services=db.getReference();
         services.keepSynced(true);

@@ -97,7 +97,7 @@
                 android:layout_marginEnd="8dp"
                 android:text="Выполнить"
                 android:id="@+id/btn_take"
-                android:textColor="?android:attr/textColorLink"
+                android:textColor="#81c639"
                 style="?attr/borderlessButtonStyle"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"/>

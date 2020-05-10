@@ -12,11 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Models.Message;
 import com.example.myapplication.Models.Request;
 import com.example.myapplication.R;
 import com.example.myapplication.ui.MyTask.MyTaskAdapter;
+import com.example.myapplication.ui.MyTask.MyTaskCommentAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.like.LikeButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder> {
@@ -37,7 +42,8 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
     FirebaseDatabase db;
     private boolean buto;
     DatabaseReference services;
-
+    private MyTaskCommentAdapter madapter;
+    private List<Message>MyTaskCommentData;
     public MyWorkAdapter(List<Request> listData, Context context) {
         this.listData = listData;
         this.context = context;
@@ -79,22 +85,19 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
                 alertbox.setTitle("Вопросы");
                 final MaterialEditText yc = comment_window.findViewById(R.id.your_Commnebt_Field);
                 yc.setMinLines(2);
-
-                final TextView tvc = comment_window.findViewById(R.id.comments);
-
-                tvc.setText("здесь ничего нет");
-                services.child("Requests").child(ld.getName_2()).child("Comment").addValueEventListener(new ValueEventListener() {
+                RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
+                rv_c.setHasFixedSize(true);
+                rv_c.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
+                MyTaskCommentData=new ArrayList<>();
+                services.child("Requests").child(ld.getTask()).child("Messages").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        tvc.setText("");
-                        String s = "";
+                        MyTaskCommentData.clear();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            tvc.append(ds.getValue().toString());
-                            tvc.append(System.getProperty("line.separator"));
-
+                            Message m=ds.getValue(Message.class);
+                            MyTaskCommentData.add(m);
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -108,19 +111,18 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
                         if (yc.getText().toString().trim().equalsIgnoreCase("")) {
                             yc.setError("This field can not be blank");
                         } else {
-                            services.child("Requests").child(ld.getName_2()).child("Comment").push().setValue(name + ':' + yc.getText().toString());
+                            services.child("Requests").child(ld.getTask()).child("Messages").push().setValue(new Message(name,yc.getText().toString()));
                             yc.setText("");
-                            services.child("Requests").child(ld.getName_2()).child("Comment").addValueEventListener(new ValueEventListener() {
+
+                            services.child("Requests").child(ld.getTask()).child("Messages").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    tvc.setText("");
-                                    String s = "";
+                                    MyTaskCommentData.clear();
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        tvc.append(ds.getValue().toString());
-                                        tvc.append(System.getProperty("line.separator"));
+                                        Message m=ds.getValue(Message.class);
+                                        MyTaskCommentData.add(m);
                                     }
                                 }
-
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -129,7 +131,8 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
                         }
                     }
                 });
-
+                madapter=new MyTaskCommentAdapter(MyTaskCommentData,v.getRootView().getContext());
+                rv_c.setAdapter(madapter);
                 alertbox.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int arg1) {
@@ -146,6 +149,7 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
             public void onClick(View v) {
                 ld.setName_2("No");
                 services.child("Requests").child(ld.getTask()).child("Task").setValue(ld);
+                services.child("Requests").child(ld.getTask()).child("Messages").removeValue();
             }
         });
 
