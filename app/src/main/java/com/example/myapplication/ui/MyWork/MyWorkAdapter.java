@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.Models.Message;
 import com.example.myapplication.Models.Request;
 import com.example.myapplication.R;
-import com.example.myapplication.ui.MyTask.MyTaskAdapter;
 import com.example.myapplication.ui.MyTask.MyTaskCommentAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,7 +29,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.like.LikeButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +38,6 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
     private String s;
     private Context context;
     FirebaseDatabase db;
-    private boolean buto;
     DatabaseReference services;
     private MyTaskCommentAdapter madapter;
     private List<Message>MyTaskCommentData;
@@ -85,7 +82,7 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
                 alertbox.setTitle("Вопросы");
                 final MaterialEditText yc = comment_window.findViewById(R.id.your_Commnebt_Field);
                 yc.setMinLines(2);
-                RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
+                final RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
                 rv_c.setHasFixedSize(true);
                 rv_c.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
                 MyTaskCommentData=new ArrayList<>();
@@ -111,23 +108,12 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
                         if (yc.getText().toString().trim().equalsIgnoreCase("")) {
                             yc.setError("This field can not be blank");
                         } else {
-                            services.child("Requests").child(ld.getTask()).child("Messages").push().setValue(new Message(name,yc.getText().toString()));
+                            Message m=new Message(name,yc.getText().toString());
+                            services.child("Requests").child(ld.getTask()).child("Messages").push().setValue(m);
                             yc.setText("");
-
-                            services.child("Requests").child(ld.getTask()).child("Messages").addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    MyTaskCommentData.clear();
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        Message m=ds.getValue(Message.class);
-                                        MyTaskCommentData.add(m);
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                            MyTaskCommentData.add(m);
+                            madapter=new MyTaskCommentAdapter(MyTaskCommentData,v.getRootView().getContext());
+                            rv_c.setAdapter(madapter);
                         }
                     }
                 });

@@ -89,7 +89,7 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
                 alertbox.setTitle("Вопросы");
                 final MaterialEditText yc=comment_window.findViewById(R.id.your_Commnebt_Field);
                 yc.setMinLines(2);
-                RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
+                final RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
                 rv_c.setHasFixedSize(true);
                 rv_c.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
                 CommentData=new ArrayList<>();
@@ -121,20 +121,11 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
                         }
                         else {
                             services.child("Requests").child(ld.getTask()).child("Comment").push().setValue(name + ':' + yc.getText().toString());
+                            CommentData.add(name + ':' + yc.getText().toString());
                             yc.setText("");
-                            services.child("Requests").child(ld.getTask()).child("Comment").addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    CommentData.clear();
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        CommentData.add(ds.getValue().toString());
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                            cadapter=new CommentAdapter(CommentData,v.getRootView().getContext());
+                            rv_c.setAdapter(cadapter);
 
-                                }
-                            });
                         }
                     }
                 });

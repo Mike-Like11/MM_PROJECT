@@ -200,7 +200,7 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
 
             LayoutInflater inflater=LayoutInflater.from(v.getRootView().getContext());
             View comment_window=inflater.inflate(R.layout.comment_window,null);
-            RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
+            final RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
            rv_c.setHasFixedSize(true);
            rv_c.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
            CommentData=new ArrayList<>();
@@ -241,19 +241,10 @@ public void onBindViewHolder(@NonNull final ViewHolder holder, final int positio
                     }
                     else {
                         services.child("Articles").child(ld.getName()).child("Comment").push().setValue(name + ':' + yc.getText().toString());
+                       CommentData.add(name + ':' + yc.getText().toString());
                         yc.setText("");
-                        services.child("Articles").child(ld.getName()).child("Comment").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                CommentData.clear();
-                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                    CommentData.add(ds.getValue().toString());
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                            }
-                        });
+                        cadapter=new CommentAdapter(CommentData,v.getRootView().getContext());
+                        rv_c.setAdapter(cadapter);
                     }
 
                 }

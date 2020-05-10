@@ -2,6 +2,7 @@ package com.example.myapplication.ui.MyTask;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.example.myapplication.Models.Message;
 import com.example.myapplication.Models.Request;
 import com.example.myapplication.R;
 import com.example.myapplication.ui.FreeTask.FreeTaskAdapter;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -63,12 +65,16 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
             holder.myTV.setText("Описание: " + ld.getDescription());
             holder.myData.setText("Дата: " + ld.getData());
             holder.txtmovie.setText("Исполнитель: " + "ещё не найден");
+            holder.mc.setStrokeColor(Color.RED);
+            holder.mc.setStrokeWidth(5);
         }
         else{
             holder.txtname.setText(ld.getTask());
             holder.myTV.setText("Описание: " + ld.getDescription());
             holder.myData.setText("Дата: " + ld.getData());
             holder.txtmovie.setText("Исполнитель: " + ld.getName_2());
+            holder.mc.setStrokeColor(Color.GREEN);
+            holder.mc.setStrokeWidth(5);
         }
 
         db = FirebaseDatabase.getInstance();
@@ -87,7 +93,7 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
                 LayoutInflater inflater = LayoutInflater.from(v.getRootView().getContext());
                 View comment_window = inflater.inflate(R.layout.comment_window, null);
                 alertbox.setView(comment_window);
-                RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
+                final RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
                 rv_c.setHasFixedSize(true);
                 rv_c.setItemViewCacheSize(10);
                 rv_c.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
@@ -121,22 +127,12 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
                         if (yc.getText().toString().trim().equalsIgnoreCase("")) {
                             yc.setError("This field can not be blank");
                         } else {
-                            services.child("Requests").child(ld.getTask()).child("Messages").push().setValue(new Message(name,yc.getText().toString()));
+                            Message m=new Message(name,yc.getText().toString());
+                            services.child("Requests").child(ld.getTask()).child("Messages").push().setValue(m);
                             yc.setText("");
-                            services.child("Requests").child(ld.getTask()).child("Messages").addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    MyTaskCommentData.clear();
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        Message m=ds.getValue(Message.class);
-                                        MyTaskCommentData.add(m);
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                            MyTaskCommentData.add(m);
+                            madapter=new MyTaskCommentAdapter(MyTaskCommentData,v.getRootView().getContext());
+                            rv_c.setAdapter(madapter);
                         }
                     }
                 });
@@ -174,6 +170,7 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtavtor, txtname, txtmovie, nl, myAdress, myTV, myData;
+        private MaterialCardView mc;
         private AppCompatButton btn_q, btn_d;
         private ViewSwitcher switcher;
         private LikeButton lb;
@@ -185,6 +182,7 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
             super(itemView);
             txtname = (TextView) itemView.findViewById(R.id.req);
             txtmovie = (TextView) itemView.findViewById(R.id.ispol);
+            mc=(MaterialCardView)itemView.findViewById(R.id.mc);
             //myAdress = (TextView) itemView.findViewById(R.id.adress);
             btn_d=(AppCompatButton)itemView.findViewById(R.id.btn_del);
             btn_q =(AppCompatButton) itemView.findViewById(R.id.btn_questions);

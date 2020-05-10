@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.MyTask;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -41,6 +43,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
 
 public class MyTaskFragment extends Fragment {
     private MyTaskModel myTaskModel;
@@ -51,6 +54,7 @@ public class MyTaskFragment extends Fragment {
     FirebaseDatabase db;
     DatabaseReference services;
     private MyTaskAdapter adapter;
+    DatePickerDialog picker;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myTaskModel = ViewModelProviders.of(this).get(MyTaskModel.class);
         View root = inflater.inflate(R.layout.fragment_my_task, container, false);
@@ -118,6 +122,25 @@ public class MyTaskFragment extends Fragment {
         final MaterialEditText description=request_window.findViewById(R.id.descriptionField);
         final  MaterialEditText address=request_window.findViewById(R.id.addressField);
         final EditText data=request_window.findViewById(R.id.dataField);
+        data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                // date picker dialog
+                picker = new DatePickerDialog(mContext,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                data.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                            }
+                        }, year, month, day);
+                picker.show();
+            }
+
+        });
         dialog.setNegativeButton("Отменить", null);
         dialog.setPositiveButton("Добавить", null);
         dialog.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
