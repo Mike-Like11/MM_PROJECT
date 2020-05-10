@@ -89,6 +89,7 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
                 alertbox.setView(comment_window);
                 RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
                 rv_c.setHasFixedSize(true);
+                rv_c.setItemViewCacheSize(10);
                 rv_c.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
                 MyTaskCommentData=new ArrayList<>();
                 alertbox.setTitle("Вопросы");
