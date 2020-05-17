@@ -2,6 +2,7 @@ package com.example.myapplication.ui.FreeTask;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Models.Article;
 import com.example.myapplication.Models.Request;
+import com.example.myapplication.Models.User;
 import com.example.myapplication.R;
 import com.example.myapplication.ui.Articles.ArticleAdapter;
 import com.example.myapplication.ui.Articles.CommentAdapter;
@@ -36,6 +39,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHolder> {
@@ -86,7 +90,7 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
                 View comment_window=inflater.inflate(R.layout.comment_window,null);
                 alertbox.setView(comment_window);
 
-                alertbox.setTitle("Вопросы");
+                alertbox.setTitle("Вопросы"+name);
                 final MaterialEditText yc=comment_window.findViewById(R.id.your_Commnebt_Field);
                 yc.setMinLines(2);
                 final RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
@@ -140,12 +144,14 @@ public class FreeTaskAdapter extends RecyclerView.Adapter<FreeTaskAdapter.ViewHo
                 alertbox.show();
             }
         });
-
         holder.btn_ta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ld.setName_2(name);
+                ld.setEmail_2(email);
+                ld.setStatus("Исполнитель найден");
                 services.child("Requests").child(ld.getTask()).child("Task").setValue(ld);
+
                 Snackbar.make(v, "Вы успешно взяли задание на выполнение!"+"\n"+"Вы можете найти его в разделе 'Мои выполняемые задания'", Snackbar.LENGTH_LONG).show();
             }
         });

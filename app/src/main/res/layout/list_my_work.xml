@@ -80,11 +80,11 @@
             android:layout_margin="4dp"
             android:orientation="horizontal">
 
+
             <androidx.appcompat.widget.AppCompatButton
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:id="@+id/btn_cooments"
-                android:layout_marginLeft="120dp"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorLink"
                 android:text="Чат"

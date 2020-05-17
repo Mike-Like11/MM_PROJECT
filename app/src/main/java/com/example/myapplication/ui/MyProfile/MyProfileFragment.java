@@ -2,6 +2,7 @@ package com.example.myapplication.ui.MyProfile;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -23,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.MaiwActivity;
+import com.example.myapplication.Models.User;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,7 +38,14 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
@@ -45,6 +55,8 @@ public class MyProfileFragment extends Fragment{
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private MyProfileModel myProfileModel;
+    FirebaseDatabase db;
+    DatabaseReference services;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
@@ -55,6 +67,8 @@ public class MyProfileFragment extends Fragment{
         TextView name_user=(TextView)root.findViewById(R.id.name_user);
         name_user.setText(name);
         FirebaseAuth mAuth;
+        db = FirebaseDatabase.getInstance();
+        services = db.getReference();
         //mAuth = FirebaseAuth.getInstance();
         final TextView textView = root.findViewById(R.id.name_user);
         final ImageView imageView = root.findViewById(R.id.imageView);
@@ -164,6 +178,24 @@ public class MyProfileFragment extends Fragment{
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             user.updatePassword(pass_new1);
+                            services.child("Users").addValueEventListener(new ValueEventListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        if(!Objects.equals(ds.getKey(), "User_name")) {
+                                            User j = ds.getValue(User.class);
+                                            if (Objects.requireNonNull(j).getEmail().equals(email) && j.getEmail() != null) {
+                                                ds.getRef().child("pass").setValue(pass_new1);
+                                            }
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                             dialog1.dismiss();
                             Snackbar.make(getActivity().findViewById(android.R.id.content), "Пароль успешно изменён!", Snackbar.LENGTH_SHORT).show();
                         }

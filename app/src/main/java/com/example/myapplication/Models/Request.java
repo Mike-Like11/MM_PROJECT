@@ -1,17 +1,36 @@
 package com.example.myapplication.Models;
 
 public class Request {
-    private String name_1, name_2,task , description,address,data;
+    private String name_1, name_2,email_2,task , description,address,data,status;
     public Request(){
 
     }
-    public Request(String name_1, String name_2, String task, String description,String address, String data) {
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getEmail_2() {
+        return email_2;
+    }
+
+    public void setEmail_2(String email_2) {
+        this.email_2 = email_2;
+    }
+
+    public Request(String name_1, String name_2, String email_2, String task, String description, String address, String data) {
         this.name_1 = name_1;
         this.name_2 = name_2;
+        this.email_2=email_2;
         this.task = task;
         this.description = description;
         this.address = address;
         this.data = data;
+        this.status="Поиск выполнителя";
     }
 
     public String getName_1() {

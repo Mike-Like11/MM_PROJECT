@@ -188,6 +188,8 @@ public class MyTaskFragment extends Fragment {
                 Request r=new Request();
                 r.setName_1(name);
                 r.setName_2("No");
+                r.setEmail_2("No");
+                r.setStatus(" Исполнитель не найден");
                 r.setTask(task.getText().toString());
                 r.setDescription(description.getText().toString());
                 r.setAddress(address.getText().toString());
