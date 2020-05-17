@@ -25,6 +25,7 @@ import com.example.myapplication.Models.Request;
 import com.example.myapplication.Models.Review;
 import com.example.myapplication.Models.User;
 import com.example.myapplication.R;
+import com.example.myapplication.ui.Articles.CommentAdapter;
 import com.example.myapplication.ui.FreeTask.FreeTaskAdapter;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
@@ -57,6 +58,8 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
     DatabaseReference services;
     private MyTaskCommentAdapter madapter;
     private List<Message>MyTaskCommentData;
+    private CommentAdapter cadapter;
+    private List<String>CommentData;
 
     public MyTaskAdapter(List<Request> listData, Context context) {
         this.listData = listData;
@@ -88,6 +91,36 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
             holder.mc.setStrokeWidth(5);
             holder.btn_q.setVisibility(View.INVISIBLE);
 
+
+        }
+        else{
+            holder.txtname.setText(ld.getTask());
+            holder.myTV.setText("Описание: " + ld.getDescription());
+            holder.myData.setText("Дата: " + ld.getData());
+            holder.txtmovie.setText("Исполнитель: " + ld.getName_2()+" (смотреть профиль)");
+            holder.txtst.setText("Статус: "+ld.getStatus());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date currentTime = Calendar.getInstance().getTime();
+            Date strDate = currentTime;
+            try {
+                strDate = sdf.parse(ld.getData());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (currentTime.after(strDate)) {
+                if(ld.getStatus().equals("Просьба выполнена")){
+                    holder.mc.setStrokeColor(Color.GREEN);
+                }
+                else {
+                    holder.mc.setStrokeColor(Color.YELLOW);
+                }
+            }
+            else{
+                holder.mc.setStrokeColor(Color.BLUE);
+            }
+
+            holder.btn_d.setText("Завершить");
+            holder.btn_q.setVisibility(View.VISIBLE);
             holder.btn_q.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -119,10 +152,7 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
 
                         }
                     });
-
-
                     alertbox.setView(comment_window);
-
                     final AppCompatImageButton acbc = comment_window.findViewById(R.id.btn_cooment_next);
                     acbc.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -150,37 +180,122 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
                     alertbox.show();
                 }
             });
-        }
-        else{
-            holder.txtname.setText(ld.getTask());
-            holder.myTV.setText("Описание: " + ld.getDescription());
-            holder.myData.setText("Дата: " + ld.getData());
-            holder.txtmovie.setText("Исполнитель: " + ld.getName_2());
-            holder.txtst.setText("Статус: "+ld.getStatus());
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            Date currentTime = Calendar.getInstance().getTime();
-            Date strDate = currentTime;
-            try {
-                strDate = sdf.parse(ld.getData());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (currentTime.after(strDate)) {
-                if(ld.getStatus()=="Просьба выполнена"){
-                    holder.mc.setStrokeColor(Color.GREEN);
-                }
-                else {
-                    holder.mc.setStrokeColor(Color.YELLOW);
-                }
-            }
-            else{
-                holder.mc.setStrokeColor(Color.BLUE);
-            }
-            holder.btn_d.setText("Завершить");
+
 
             holder.mc.setStrokeWidth(5);
         }
+        holder.btn_q_a.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder alertbox = new AlertDialog.Builder(v.getRootView().getContext());
+                AlertDialog alert = alertbox.create();
 
+                LayoutInflater inflater = LayoutInflater.from(v.getRootView().getContext());
+                View comment_window = inflater.inflate(R.layout.comment_window, null);
+                alertbox.setView(comment_window);
+                final RecyclerView rv_c=comment_window.findViewById(R.id.recyclerview2);
+                rv_c.setHasFixedSize(true);
+                rv_c.setItemViewCacheSize(10);
+                rv_c.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
+                CommentData=new ArrayList<>();
+                alertbox.setTitle("Вопросы");
+                final MaterialEditText yc = comment_window.findViewById(R.id.your_Commnebt_Field);
+                yc.setMinLines(2);
+                services.child("Requests").child(ld.getTask()).child("Comment").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        CommentData.clear();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            CommentData.add(ds.getValue().toString());
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                alertbox.setView(comment_window);
+
+                final AppCompatImageButton acbc = comment_window.findViewById(R.id.btn_cooment_next);
+                acbc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (yc.getText().toString().trim().equalsIgnoreCase("")) {
+                            yc.setError("This field can not be blank");
+                        } else {
+                            services.child("Requests").child(ld.getTask()).child("Comment").push().setValue(name + ':' + yc.getText().toString());
+                            CommentData.add(name + ':' + yc.getText().toString());
+                            yc.setText("");
+                            cadapter=new CommentAdapter(CommentData,v.getRootView().getContext());
+                            rv_c.setAdapter(cadapter);
+                        }
+                    }
+                });
+                cadapter=new CommentAdapter(CommentData,v.getRootView().getContext());
+                rv_c.setAdapter(cadapter);
+                alertbox.setNegativeButton("Закрыть", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        dialog.dismiss();
+                    }
+                });
+                alertbox.show();
+            }
+        });
+        if (!ld.getName_1().equals("") && !ld.getName_2().equals("No") && !ld.getTask().equals("")) {
+            holder.txtmovie.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(v.getRootView().getContext());
+
+                    dialog.setTitle("Профиль "+ld.getName_2());
+                    LayoutInflater inflater = LayoutInflater.from(v.getRootView().getContext());
+                    View profile_window = inflater.inflate(R.layout.profile, null);
+                    dialog.setView(profile_window);
+                    final MaterialTextView r_v= profile_window.findViewById(R.id.rating_progile);
+                    final MaterialTextView t_n_v = profile_window.findViewById(R.id.tast_no_profile);
+                    final MaterialTextView t_v = profile_window.findViewById(R.id.task_profile);
+                    services.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                if(!Objects.equals(ds.getKey(), "User_name")) {
+                                    User j = ds.getValue(User.class);
+                                    if (Objects.requireNonNull(j).getEmail().equals(ld.getEmail_2()) && j.getEmail() != null) {
+                                        r_v.setText("Рейтинг: "+j.getRating());
+                                        t_n_v.setText("Задания, от который отказался: "+j.getTask_not_done());
+                                        t_v.setText("Задания, которые выполнил: "+j.getTask_done());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    dialog.setPositiveButton("Понятно", null);
+
+                    final AlertDialog dialog1 = dialog.create();
+                    dialog1.show();
+                    dialog.setPositiveButton("Понятно", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
+                            dialog1.dismiss();
+                        }
+
+                    });
+
+
+
+                }
+            });
+        }
 
 
         if(holder.btn_d.getText()=="Завершить") {
@@ -290,7 +405,7 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
         public ViewHolder(View itemView) {
             super(itemView);
             txtname = (TextView) itemView.findViewById(R.id.req);
-            txtmovie = (TextView) itemView.findViewById(R.id.ispol);
+            txtmovie = (AppCompatButton) itemView.findViewById(R.id.ispol);
             txtst=(TextView)itemView.findViewById(R.id.st);
             mc=(MaterialCardView)itemView.findViewById(R.id.mc);
             //myAdress = (TextView) itemView.findViewById(R.id.adress);

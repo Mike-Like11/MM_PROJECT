@@ -34,13 +34,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
+                style="?attr/borderlessButtonStyle"
                 android:id="@+id/ispol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_weight="6"
-                android:autoSizeTextType="uniform"
+
+
+                android:textSize="12sp"
                 android:textColor="?android:attr/textColorSecondary"/>
 
             <TextView
@@ -48,6 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginLeft="12dp"
                 android:layout_weight="1"
                 android:autoSizeTextType="uniform"
                 android:textColor="?android:attr/textColorSecondary"/>
@@ -56,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginLeft="12dp"
                 android:layout_weight="1"
                 android:autoSizeTextType="uniform"
                 android:textColor="?android:attr/textColorSecondary"/>
