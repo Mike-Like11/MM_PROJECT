@@ -83,8 +83,18 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (currentTime.after(strDate)) {
+        if (currentTime.after(strDate)&&!ld.getStatus().equals("Выполнение началось")&&!ld.getStatus().equals("Просьба выполнена")) {
             holder.btn_begin.setVisibility(View.VISIBLE);
+            holder.btn_begin.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        ld.setStatus("Выполнение началось");
+                                                        services.child("Requests").child(ld.getTask()).child("Task").setValue(ld);
+                                                        holder.btn_begin.setVisibility(View.VISIBLE);
+                                                    }
+                                                }
+
+            );
             holder.btn_r.setText("завершить");
         }
         else{
