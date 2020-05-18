@@ -59,8 +59,6 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
     private MyTaskCommentAdapter madapter;
     private List<Message>MyTaskCommentData;
     private CommentAdapter cadapter;
-    private ProfileAdapter padapter;
-    private List<Review>ProfileAdapterData;
     private List<String>CommentData;
 
     public MyTaskAdapter(List<Request> listData, Context context) {
@@ -256,11 +254,6 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
                     LayoutInflater inflater = LayoutInflater.from(v.getRootView().getContext());
                     View profile_window = inflater.inflate(R.layout.profile, null);
                     dialog.setView(profile_window);
-                    final RecyclerView rv_c3=profile_window.findViewById(R.id.recyclerview5);
-                    rv_c3.setHasFixedSize(true);
-                    rv_c3.setItemViewCacheSize(10);
-                    rv_c3.setLayoutManager(new LinearLayoutManager(v.getRootView().getContext()));
-                    ProfileAdapterData=new ArrayList<>();
                     final MaterialTextView r_v= profile_window.findViewById(R.id.rating_progile);
                     final MaterialTextView t_n_v = profile_window.findViewById(R.id.tast_no_profile);
                     final MaterialTextView t_v = profile_window.findViewById(R.id.task_profile);
@@ -285,35 +278,7 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
 
                         }
                     });
-                    services.child("Reviews").addValueEventListener(new ValueEventListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            ProfileAdapterData.clear();
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                Review rl=ds.getValue(Review.class);
-                                if(Objects.requireNonNull(rl).getName().equals(ld.getName_2()))
-                                ProfileAdapterData.add(rl);
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
-                    padapter=new ProfileAdapter(ProfileAdapterData,v.getRootView().getContext());
-                    rv_c3.setAdapter(padapter);
-                    dialog.setNegativeButton("Отказаться от испонителя", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            ld.setEmail_2("No");
-                            ld.setName_2("No");
-                            ld.setStatus(" Исполнитель не найден");
-                            services.child("Requests").child(ld.getTask()).child("Task").setValue(ld);
-                            dialog.dismiss();
-                        }
-                    });
                     dialog.setPositiveButton("Понятно", null);
 
                     final AlertDialog dialog1 = dialog.create();
