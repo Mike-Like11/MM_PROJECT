@@ -17,6 +17,8 @@
     <string name="menu_my_task">Мои просьбы</string>
     <string name="menu_my_work">Мои выполняемые задания </string>
     <string name="menu_articles">Статьи</string>
+    <string name="menu_top">Рейтинг пользователей</string>
+    <string name="menu_reviews">Отзывы о нас</string>
     <string name="menu_share">Поделиться</string>
     <string name="menu_send">Отправка ошибок</string>
     <string name="menu_profile">Мой профиль</string>

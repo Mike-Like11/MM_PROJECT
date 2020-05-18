@@ -45,13 +45,11 @@ import java.util.concurrent.TimeUnit;
 
 public class MyTaskCommentAdapter extends RecyclerView.Adapter<MyTaskCommentAdapter.ViewHolder>{
     private List<Message> MyTaskCommentData;
-
     private  boolean buto=false;
     private Context context;
     public MyTaskCommentAdapter(List<Message> listData, Context context) {
         this.MyTaskCommentData = listData;
         this.context =context;
-
     }
 
 

@@ -68,9 +68,7 @@ public class MyTaskFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(mContext));
         listData=new ArrayList<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        // Name, email address, and profile photo Url
         final String name = user.getDisplayName();
-        final String email = user.getEmail();
 
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,14 +92,10 @@ public class MyTaskFragment extends Fragment {
                             }
                         }
                     }
-
                     adapter=new MyTaskAdapter(listData,mContext);
                     rv.setAdapter(adapter);
-
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
