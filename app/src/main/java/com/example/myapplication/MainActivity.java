@@ -197,7 +197,7 @@ dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnCli
                                     }
                                 }
 
-                                if(f==false){
+                                if(f==false) {
 
                                     auth.createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString())
                                             .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -208,9 +208,9 @@ dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnCli
                                                     user1.setName(name.getText().toString());
                                                     user1.setPhone(phone.getText().toString());
                                                     user1.setPass(pass.getText().toString());
-                                                    User_name un=new User_name();
-                                                    un.setName(user1.getDisplayName());
-                                                    users.child("Users").child("User_name").child(user1.getDisplayName()).setValue(un);
+                                                    User_name un = new User_name();
+                                                    un.setName(user1.getName());
+                                                    users.child("Users").child("User_name").child(user1.getName()).setValue(un);
                                                     users.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user1)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
@@ -225,10 +225,15 @@ dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnCli
                                                             });
 
                                                 }
-                                            });
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            email.setError("Ошибка! Возможно данная почта уже используется");
+                                        }
+                                    });
                                 }
                                 else {
-                                    name.setError("данное имя уже занято");
+                                    name.setError("Данное имя уже занято");
                                 }
 
                             }

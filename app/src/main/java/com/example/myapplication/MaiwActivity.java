@@ -56,7 +56,7 @@ public class MaiwActivity extends AppCompatActivity {
         Menu home=findViewById(R.id.nav_home);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_review,
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_review, R.id.nav_rating,
                 R.id.nav_tools, R.id.nav_share, R.id.nav_send, R.id.nav_profile)
                 .setDrawerLayout(drawer)
                 .build();

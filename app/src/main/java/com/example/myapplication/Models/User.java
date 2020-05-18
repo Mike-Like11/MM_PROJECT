@@ -25,7 +25,7 @@ public class User {
         this.rating=50;
     }
 
-    public String getDisplayName() {
+    public String getName() {
         return name;
     }
 

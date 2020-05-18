@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -51,7 +52,7 @@ import static android.content.ContentValues.TAG;
 
 public class MyProfileFragment extends Fragment{
 
-    Button pass,photo,exit;
+    Button pass,photo,exit, info;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private MyProfileModel myProfileModel;
@@ -75,6 +76,7 @@ public class MyProfileFragment extends Fragment{
         pass=root.findViewById(R.id.pass);
         photo=root.findViewById(R.id.photo);
         exit=root.findViewById(R.id.exit);
+        info=root.findViewById(R.id.info);
         pass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +93,12 @@ public class MyProfileFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 exit();
+            }
+        });
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                infos();
             }
         });
         return root;
@@ -213,5 +221,48 @@ public class MyProfileFragment extends Fragment{
 
     }
 
+    private void infos(){
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String name = user.getEmail();
+        final String email = user.getEmail();
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View profile_window_info = inflater.inflate(R.layout.profile_info, null);
+        dialog.setView(profile_window_info);
+        final MaterialTextView rpi= profile_window_info.findViewById(R.id.rating_profile_info);
+        final MaterialTextView tnpi = profile_window_info.findViewById(R.id.task_no_profile_info);
+        final MaterialTextView tpi = profile_window_info.findViewById(R.id.task_profile_info);
+        dialog.setTitle("Информация о пользователе");
+        services.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot npsnapshot : dataSnapshot.getChildren()) {
+                    if (!npsnapshot.getKey().equals("User_name")) {
+                        User U = npsnapshot.getValue(User.class);
+                        if (U.getEmail().equals(email)) {
+                            rpi.setText("Рейтинг: " + U.getRating());
+                            tnpi.setText("Задания, от которых вы отказались: " + U.getTask_not_done());
+                            tpi.setText("Задания, которые вы выполнили: " + U.getTask_done());
+                            break;
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        dialog.setPositiveButton("Понятно", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        final AlertDialog dialog1 = dialog.create();
+        dialog1.show();
+    }
 
 }

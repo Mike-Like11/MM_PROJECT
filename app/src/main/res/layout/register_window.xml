@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/parolField"
-            android:hint="Пароль"
+            android:hint="Пароль(не менее 6ти символов)"
             app:errorEnabled="true"
             android:inputType="numberPassword"
             android:text=""

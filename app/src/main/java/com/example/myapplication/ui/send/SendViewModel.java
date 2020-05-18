@@ -10,7 +10,7 @@ public class SendViewModel extends ViewModel {
 
     public SendViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is send fragment");
+        mText.setValue("Вы сможете воспользоваться данным разделом в следующей версии приложения :)");
     }
 
     public LiveData<String> getText() {
