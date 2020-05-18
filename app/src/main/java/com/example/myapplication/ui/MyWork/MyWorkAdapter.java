@@ -90,7 +90,7 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
                                                     public void onClick(View v) {
                                                         ld.setStatus("Выполнение началось");
                                                         services.child("Requests").child(ld.getTask()).child("Task").setValue(ld);
-                                                        holder.btn_begin.setVisibility(View.VISIBLE);
+                                                        holder.btn_begin.setVisibility(View.INVISIBLE);
                                                     }
                                                 }
 
