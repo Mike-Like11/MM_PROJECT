@@ -84,9 +84,11 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
             e.printStackTrace();
         }
         if (currentTime.after(strDate)) {
-           holder.btn_r.setText("завершить");
+            holder.btn_begin.setVisibility(View.VISIBLE);
+            holder.btn_r.setText("завершить");
         }
         else{
+            holder.btn_begin.setVisibility(View.INVISIBLE);
             holder.btn_r.setText("отказаться");
         }
 
@@ -233,7 +235,7 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtavtor, txtname, txtmovie, nl, myAdress, myTV, myData;
-        private AppCompatButton btn_r;
+        private AppCompatButton btn_r, btn_begin;
         private AppCompatButton btn_co,btn_eee;
         private ViewSwitcher switcher;
         private LikeButton lb;
@@ -249,7 +251,7 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
             //btn_ta=(AppCompatButton)itemView.findViewById(R.id.btn_take);
             btn_r=(AppCompatButton) itemView.findViewById(R.id.btn_refuse);
             btn_co = (AppCompatButton) itemView.findViewById(R.id.btn_cooments);
-
+            btn_begin= (AppCompatButton) itemView.findViewById(R.id.btn_begin);
             myTV = (TextView) itemView.findViewById(R.id.avtor_2);
             myData = (TextView) itemView.findViewById(R.id.myData);
             //lb = (LikeButton) itemView.findViewById(R.id.star_button);

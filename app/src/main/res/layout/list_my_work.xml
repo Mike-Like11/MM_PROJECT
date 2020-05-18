@@ -94,9 +94,20 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="0dp"
                 android:text="Отказаться"
                 android:id="@+id/btn_refuse"
+                android:textColor="?android:attr/textColorLink"
+                style="?attr/borderlessButtonStyle"
+                android:layout_marginRight="0dp"
+                android:layout_weight="1"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Начать"
+                android:id="@+id/btn_begin"
                 android:textColor="?android:attr/textColorLink"
                 style="?attr/borderlessButtonStyle"
                 android:layout_marginRight="8dp"
