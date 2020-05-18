@@ -279,20 +279,31 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
                         }
                     });
 
-                    dialog.setPositiveButton("Понятно", null);
-
-                    final AlertDialog dialog1 = dialog.create();
-                    dialog1.show();
                     dialog.setPositiveButton("Понятно", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int which) {
-                            dialog1.dismiss();
+                            dialogInterface.dismiss();
                         }
-
                     });
 
+                    dialog.setNegativeButton("Отказаться от испонителя", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
 
+                        }
+                    });
 
+                    final AlertDialog dialog1 = dialog.create();
+                    dialog1.show();
+
+                    dialog1.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AlertDialog.Builder dialog2 = new AlertDialog.Builder(v.getRootView().getContext());
+                            dialog2.setTitle("Отказаться от испонителя");
+
+                        }
+                    });
                 }
             });
         }
