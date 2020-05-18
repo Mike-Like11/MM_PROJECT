@@ -58,7 +58,28 @@
             app:met_primaryColor="#982360"
             app:met_singleLineEllipsis="true"
             app:errorEnabled="true"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scroll"
+            android:layout_weight="1"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
+                android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    app:stackFromEnd="true"
+                    android:layout_marginRight="5dp">
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
