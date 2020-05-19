@@ -70,19 +70,19 @@ public class FreeTaskFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     listData.clear();
+                    int i=0;
                     for (DataSnapshot npsnapshot : dataSnapshot.child("Requests").getChildren()) {
                         Request l = npsnapshot.child("Task").getValue(Request.class);
                         assert l != null;
                         if (!name.equals(l.getName_1())){
                             if (l.getName_2().equals("No") && !l.getTask().equals("")) {
+                                i++;
                                 listData.add(l);
                             }
                         }
                     }
-
                     adapter=new FreeTaskAdapter(listData,mContext);
                     rv.setAdapter(adapter);
-
                 }
 
             }
