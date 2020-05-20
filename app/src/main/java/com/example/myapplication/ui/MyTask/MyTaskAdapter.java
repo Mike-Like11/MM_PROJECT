@@ -80,7 +80,14 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
         final String name = user.getDisplayName();
         final String email = user.getEmail();
 
-        if (!ld.getName_1().equals("") && ld.getName_2().equals("No") && !ld.getTask().equals("")) {
+        if (ld.getTask().equals("У вас пока что нет активных просьб")){
+            holder.txtname.setText(ld.getTask());
+            holder.btn_q_a.setVisibility(View.INVISIBLE);
+            holder.btn_q.setVisibility(View.INVISIBLE);
+            holder.btn_d.setVisibility(View.INVISIBLE);
+        }
+
+        else if (!ld.getName_1().equals("") && ld.getName_2().equals("No") && !ld.getTask().equals("")) {
             holder.txtname.setText(ld.getTask());
             holder.myTV.setText("Описание: " + ld.getDescription());
             holder.myData.setText("Дата: " + ld.getData());
