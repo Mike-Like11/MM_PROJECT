@@ -279,5 +279,5 @@ public class MyProfileFragment extends Fragment{
     private void changeAvatar(){
 
     }
-    
+
 }
