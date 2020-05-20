@@ -91,7 +91,6 @@ public class FreeTaskFragment extends Fragment {
                         r.setDescription("Нету :(");
                         r.setAddress("Нету :(");
                         r.setData("Нету :(");
-                        services.child("Requests").child(r.getTask()).child("Task").setValue(r);
                         listData.add(r);
                     }
                     adapter=new FreeTaskAdapter(listData,mContext);

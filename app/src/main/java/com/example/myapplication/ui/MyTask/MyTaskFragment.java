@@ -104,7 +104,6 @@ public class MyTaskFragment extends Fragment {
                         r.setDescription("Исполнитель не найден");
                         r.setAddress(" Исполнитель не найден");
                         r.setData("Исполнитель не найден");
-                        services.child("Requests").child(r.getTask()).child("Task").setValue(r);
                         listData.add(r);
                     }
                     adapter=new MyTaskAdapter(listData,mContext);
