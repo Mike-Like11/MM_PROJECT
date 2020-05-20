@@ -88,7 +88,7 @@ public class MyTaskFragment extends Fragment {
                         Request l = npsnapshot.child("Task").getValue(Request.class);
                         assert l != null;
                         if (name.equals(l.getName_1())){
-                            if (!l.getName_2().equals("") && !l.getTask().equals("") && !l.getTask().equals("В данный момент у вас нет выполняемых заданий")) {
+                            if (!l.getName_2().equals("") && !l.getTask().equals("") && !l.getTask().equals("В данный момент у вас нет выполняемых заданий") && !l.getTask().equals("У вас пока что нет активных просьб")) {
                                 i++;
                                 listData.add(l);
                             }

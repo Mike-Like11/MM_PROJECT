@@ -89,19 +89,12 @@ public class MyProfileFragment extends Fragment{
         final TextView textView = root.findViewById(R.id.name_user);
         final ImageView imageView = root.findViewById(R.id.imageView);
         pass=root.findViewById(R.id.pass);
-        photo=root.findViewById(R.id.photo);
         exit=root.findViewById(R.id.exit);
         info=root.findViewById(R.id.info);
         pass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changePass();
-            }
-        });
-        photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeAvatar();
             }
         });
         exit.setOnClickListener(new View.OnClickListener() {
