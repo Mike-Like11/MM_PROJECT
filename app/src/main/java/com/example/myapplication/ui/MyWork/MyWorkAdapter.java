@@ -63,7 +63,12 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
 
     public void onBindViewHolder(@NonNull final MyWorkAdapter.ViewHolder holder, final int position) {
         final Request ld = listData.get(position);
-        if (!ld.getName_1().equals("") && !ld.getName_2().equals("") && !ld.getTask().equals("")) {
+        if (ld.getTask().equals("В данный момент у вас нет выполняемых заданий")){
+            holder.txtname.setText(ld.getTask());
+            holder.btn_r.setVisibility(View.INVISIBLE);
+            holder.btn_co.setVisibility(View.INVISIBLE);
+        }
+        else if (!ld.getName_1().equals("") && !ld.getName_2().equals("") && !ld.getTask().equals("")) {
             holder.txtname.setText(ld.getTask());
             holder.txtmovie.setText("Имя заказчика: " + ld.getName_1());
             holder.myTV.setText("Описание: " + ld.getDescription());

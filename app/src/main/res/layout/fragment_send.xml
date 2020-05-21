@@ -1,19 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:background="?attr/colorPrimary"
+        android:orientation="vertical"
 
-    <TextView
-        android:id="@+id/text_send"
+        android:paddingTop="11dp"
+        android:gravity="center"
+
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="273dp"
+            android:contentDescription="@string/nav_header_desc"
+            app:srcCompat="@drawable/b22473_siberian_cat" />
+
+        <TextView
+            android:id="@+id/bugsss"
+            android:text="В данном разделе вы можете сообщить нам о всех ошибках и неполадках, которые возникают у вас в процессе использования нашего приложения. Мы будем Вам очень признательны! :)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:layout_marginTop="0dp"
+            android:fontFamily="@font/montserrat"
+            android:ellipsize="marquee"
+            android:textColor="@android:color/black"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginTop="603dp"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/infor"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/btn"
+            android:gravity="center"
+            android:ellipsize="marquee"
+            android:textSize="20sp"
+            android:fontFamily="@font/montserrat"
+            android:text="Написать сообщение об ошибке"
+            android:textColor="@android:color/black"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -106,7 +106,6 @@ public class ReviewsFragment extends Fragment {
         dialog.setView(review_window);
         final MaterialEditText review=review_window.findViewById(R.id.review_field);
 
-        dialog.setNegativeButton("Отменить", null);
         dialog.setPositiveButton("Добавить", null);
         dialog.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
             @Override
@@ -132,7 +131,7 @@ public class ReviewsFragment extends Fragment {
 
 
                 if (TextUtils.isEmpty(review.getText().toString())) {
-                    review.setError("Введите ваше описание") ;
+                    review.setError("Поле отзыва пустое") ;
                     return;
                 }
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

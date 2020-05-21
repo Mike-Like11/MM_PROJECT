@@ -102,7 +102,7 @@ private void showSignWindow(){
             }
 
             if(pass.getText().toString().length()<5){
-                pass.setError("неправильный пароль");
+                pass.setError("Неправильный пароль");
                 return;
             }
             auth.signInWithEmailAndPassword(email.getText().toString(),pass.getText().toString())
@@ -117,7 +117,7 @@ private void showSignWindow(){
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    email.setError("Ошибка авторизации "+e.getMessage());
+                    email.setError("Ошибка авторизации"+"\n"+"Возможно, вы неверно ввели данные");
                 }
             });
 

@@ -70,19 +70,31 @@ public class FreeTaskFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     listData.clear();
+                    int i=0;
                     for (DataSnapshot npsnapshot : dataSnapshot.child("Requests").getChildren()) {
                         Request l = npsnapshot.child("Task").getValue(Request.class);
                         assert l != null;
                         if (!name.equals(l.getName_1())){
-                            if (l.getName_2().equals("No") && !l.getTask().equals("")) {
+                            if (l.getName_2().equals("No") && !l.getTask().equals("") && !l.getTask().equals("В данный момент у вас нет выполняемых заданий") && !l.getTask().equals("У вас пока что нет активных просьб")) {
+                                i++;
                                 listData.add(l);
                             }
                         }
                     }
-
+                    if (i==0){
+                        Request r=new Request();
+                        r.setName_1("Нету :(");
+                        r.setName_2("1");
+                        r.setEmail_2("1");
+                        r.setStatus("1");
+                        r.setTask("В данный момент нет доступных для выполнения просьб :(");
+                        r.setDescription("Нету :(");
+                        r.setAddress("Нету :(");
+                        r.setData("Нету :(");
+                        listData.add(r);
+                    }
                     adapter=new FreeTaskAdapter(listData,mContext);
                     rv.setAdapter(adapter);
-
                 }
 
             }

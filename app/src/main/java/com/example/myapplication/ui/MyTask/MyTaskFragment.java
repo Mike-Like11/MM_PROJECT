@@ -83,14 +83,28 @@ public class MyTaskFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     listData.clear();
+                    int i=0;
                     for (DataSnapshot npsnapshot : dataSnapshot.child("Requests").getChildren()) {
                         Request l = npsnapshot.child("Task").getValue(Request.class);
                         assert l != null;
                         if (name.equals(l.getName_1())){
-                            if (!l.getName_2().equals("") && !l.getTask().equals("")) {
+                            if (!l.getName_2().equals("") && !l.getTask().equals("") && !l.getTask().equals("В данный момент у вас нет выполняемых заданий") && !l.getTask().equals("У вас пока что нет активных просьб")) {
+                                i++;
                                 listData.add(l);
                             }
                         }
+                    }
+                    if (i==0){
+                        Request r=new Request();
+                        r.setName_1(name);
+                        r.setName_2("No");
+                        r.setEmail_2("No");
+                        r.setStatus("Исполнитель не найден");
+                        r.setTask("У вас пока что нет активных просьб");
+                        r.setDescription("Исполнитель не найден");
+                        r.setAddress(" Исполнитель не найден");
+                        r.setData("Исполнитель не найден");
+                        listData.add(r);
                     }
                     adapter=new MyTaskAdapter(listData,mContext);
                     rv.setAdapter(adapter);

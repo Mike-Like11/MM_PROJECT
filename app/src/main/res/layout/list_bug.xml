@@ -12,13 +12,13 @@
         android:orientation="vertical">
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/review_field"
+            android:id="@+id/answering"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autoSizeTextType="uniform"
-            android:hint="Отзыв о нас"
-            android:inputType="textMultiLine"
+            android:layout_height="436dp"
             android:minLines="10"
+            android:autoSizeTextType="uniform"
+            android:hint="Сообщение"
+            android:inputType="textMultiLine"
             android:scrollbars="vertical"
             android:text=""
             android:textColor="@color/colorPrimary"
