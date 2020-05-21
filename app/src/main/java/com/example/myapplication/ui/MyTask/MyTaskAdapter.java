@@ -345,7 +345,7 @@ public class MyTaskAdapter extends RecyclerView.Adapter<MyTaskAdapter.ViewHolder
                             final Review r=new Review();
                             r.setDescription(description_est.getText().toString());
                             r.setName(ld.getName_2());
-                            r.setRating(rb.getNumStars()*5);
+                            r.setRating((int) rb.getRating()*5);
                             services.child("Reviews").child(ld.getName_2()).setValue(r);
                             services.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)

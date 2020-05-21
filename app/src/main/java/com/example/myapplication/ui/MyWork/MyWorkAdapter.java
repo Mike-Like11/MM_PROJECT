@@ -100,12 +100,24 @@ public class MyWorkAdapter extends RecyclerView.Adapter<MyWorkAdapter.ViewHolder
                                                 }
 
             );
-            holder.btn_r.setText("завершить");
+
         }
         else{
             holder.btn_begin.setVisibility(View.INVISIBLE);
-            holder.btn_r.setText("отказаться");
         }
+        if(ld.getStatus().equals("Выполнение началось")) {
+            holder.btn_r.setText("завершить");
+        }
+        else{
+            if(ld.getStatus().equals("Просьба выполнена")){
+                holder.btn_r.setVisibility(View.INVISIBLE);
+            }
+            else {
+                holder.btn_r.setText("отказаться");
+            }
+        }
+
+
 
 
 
