@@ -10,11 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:screenOrientation="portrait"
             android:name=".MaiwActivity"
             android:label="@string/title_activity_maiw"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".MapActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MapActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
